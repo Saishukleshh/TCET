@@ -198,3 +198,8 @@ Append-only log. **Every time the IDE / coding agent changes anything** (code, s
 
 
 
+
+### D-031 — Fix incident detail null-coordinate crash + Vercel monorepo deployment — 2026-09-30
+- **What changed**: apps/web/src/app/incidents/[id]/page.tsx, new vercel.json at repo root, README.md updated.
+- **How it works**: The incident detail page called .toFixed(4) directly on incident.lat/lng without a null guard. When the API returned an incident without coordinates the component crashed with TypeError. Added conditional rendering for both the coordinate display span and the entire MapView block. vercel.json sets rootDirectory=apps/web so Vercel finds the Next.js app inside the monorepo instead of trying to build the repo root.
+- **Why**: The original error surfaced at runtime when navigating to /incidents/<id> for any incident seeded without lat/lng. Vercel deployment failed because it detected the root package.json workspaces config and could not auto-detect the Next.js app location. README updated to add Vercel badge, live URL, deployment instructions, env var table, Citizen Portal route, Groq chatbot feature, and updated repo structure tree.
