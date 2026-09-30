@@ -196,25 +196,43 @@ export default function IncidentDetailPage({ params }: Props) {
                     color: colors.ochre,
                   }}
                 >
-                  {incident.lat.toFixed(4)}°N, {incident.lng.toFixed(4)}°E
+                  {incident.lat != null && incident.lng != null
+                    ? `${incident.lat.toFixed(4)}°N, ${incident.lng.toFixed(4)}°E`
+                    : "N/A"}
                 </span>
               </div>
               <div style={{ flex: 1, position: "relative" }}>
-                <MapView
-                  incidents={[
-                    {
-                      id: incident.id,
-                      lat: incident.lat,
-                      lng: incident.lng,
-                      severity: incident.severity,
-                      status: incident.status,
-                      confidence: incident.confidence,
-                      report_count: incident.report_count,
-                    },
-                  ]}
-                  center={[incident.lng, incident.lat]}
-                  zoom={14.5}
-                />
+                {incident.lat != null && incident.lng != null ? (
+                  <MapView
+                    incidents={[
+                      {
+                        id: incident.id,
+                        lat: incident.lat,
+                        lng: incident.lng,
+                        severity: incident.severity,
+                        status: incident.status,
+                        confidence: incident.confidence,
+                        report_count: incident.report_count,
+                      },
+                    ]}
+                    center={[incident.lng, incident.lat]}
+                    zoom={14.5}
+                  />
+                ) : (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      height: "100%",
+                      color: "#888",
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "0.8rem",
+                    }}
+                  >
+                    NO COORDINATES AVAILABLE
+                  </div>
+                )}
               </div>
             </div>
           </div>
