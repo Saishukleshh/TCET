@@ -771,6 +771,7 @@ export default function CommandPage() {
             {activeTab === "risk" && selectedZone && (
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 <RiskExplain
+                  zoneId={selectedZone.properties.id}
                   zoneName={selectedZone.properties.name}
                   risk={selectedZone.properties.risk ?? 0}
                   factors={

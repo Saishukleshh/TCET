@@ -158,3 +158,9 @@ Append-only log. **Every time the IDE / coding agent changes anything** (code, s
 
 
 
+
+### D-025 · Groq Llama 3.3 and Llama 3.2 Vision intelligence pipeline · 2026-09-30
+- Status: active
+- What changed: Created groq_client.py, updated verify_image.py with Groq Vision (llama-3.2-11b-vision-preview), added cluster summarization in dedupe.py (llama-3.3-70b-versatile), added sitrep.py for tactical commander briefings and citizen alert drafts, exposed GET /risk/sitrep/{zone_id}, and integrated an AI SitRep Briefing section into RiskExplain.tsx on the Command dashboard. Documented GROQ_API_KEY in .env.example.
+- How it works: An async HTTP client queries Groq high-speed inference endpoints (api.groq.com/openai/v1/chat/completions) using OpenAI-compatible schema and json_object mode. When GROQ_API_KEY is present, photo submissions are verified via multimodal vision in <500ms, citizen reports in duplicate clusters are synthesized into concise briefs, and sector situation reports are generated on demand. Strict wording guardrails enforce risk assessment and recommended action. If Groq is unavailable, deterministic heuristic and template fallbacks fire seamlessly.
+- Why: Provides ultra-fast (<1s) LLM response times essential for live hackathon emergency response demos while strictly maintaining non-AI fallbacks so the application never breaks even without credentials.

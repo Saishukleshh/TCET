@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { colors } from "@/lib/design-tokens";
+import { fetchZoneSitrep } from "@/lib/api-client";
 
 interface RiskFactors {
   rain_norm: number;
@@ -10,6 +12,7 @@ interface RiskFactors {
 }
 
 interface RiskExplainProps {
+  zoneId?: string;
   zoneName: string;
   risk: number;
   factors: RiskFactors;
@@ -40,8 +43,51 @@ function riskLabel(risk: number): string {
   return "SAFE";
 }
 
-export default function RiskExplain({ zoneName, risk, factors, rainfallMmH, populationExposed }: RiskExplainProps) {
+export default function RiskExplain({
+  zoneId,
+  zoneName,
+  risk,
+  factors,
+  rainfallMmH,
+  populationExposed,
+}: RiskExplainProps) {
   const colour = riskColor(risk);
+  const [sitrep, setSitrep] = useState<{
+    summary: string;
+    recommended_action: string;
+    confidence: number;
+    model: string;
+  } | null>(null);
+  const [loadingSitrep, setLoadingSitrep] = useState(false);
+
+  useEffect(() => {
+    if (!zoneId) return;
+    let isCancelled = false;
+    setLoadingSitrep(true);
+
+    fetchZoneSitrep(zoneId)
+      .then((data) => {
+        if (!isCancelled) {
+          setSitrep({
+            summary: data.summary,
+            recommended_action: data.recommended_action,
+            confidence: data.confidence,
+            model: data.model,
+          });
+        }
+      })
+      .catch((err) => {
+        console.warn("Could not load AI SitRep:", err);
+      })
+      .finally(() => {
+        if (!isCancelled) setLoadingSitrep(false);
+      });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [zoneId, rainfallMmH]);
+
   return (
     <div
       style={{
@@ -99,6 +145,70 @@ export default function RiskExplain({ zoneName, risk, factors, rainfallMmH, popu
         <span>Precip: {rainfallMmH.toFixed(1)} mm/h</span>
         <span>Exposed: {populationExposed.toLocaleString()}</span>
       </div>
+
+      {/* AI Tactical Situation Brief (SitRep) */}
+      <div
+        style={{
+          marginTop: "var(--space-3)",
+          padding: "var(--space-2)",
+          background: colors.washi,
+          border: `2px solid ${colors.ink}`,
+          boxShadow: `2px 2px 0 ${colors.ink}`,
+        }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+          <span style={{ fontFamily: "var(--font-display)", fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.06em" }}>
+            AI SITREP BRIEFING
+          </span>
+          <span
+            style={{
+              fontSize: "0.65rem",
+              fontFamily: "var(--font-mono)",
+              background: sitrep?.model?.includes("groq") ? colors.indigo : colors.washiMuted,
+              color: sitrep?.model?.includes("groq") ? colors.washi : colors.ink,
+              padding: "2px 6px",
+              borderRadius: 2,
+              fontWeight: 700,
+            }}
+          >
+            {loadingSitrep ? "ANALYZING..." : sitrep?.model || "GROQ LLAMA-3.3"}
+          </span>
+        </div>
+
+        {loadingSitrep ? (
+          <div style={{ fontSize: "0.75rem", opacity: 0.7, fontStyle: "italic", padding: "6px 0" }}>
+            Synthesizing telemetry & neural situational assessment...
+          </div>
+        ) : sitrep ? (
+          <div style={{ fontSize: "0.75rem", display: "flex", flexDirection: "column", gap: 6 }}>
+            <p style={{ margin: 0, lineHeight: 1.4, opacity: 0.9 }}>
+              {sitrep.summary}
+            </p>
+            <div
+              style={{
+                marginTop: 4,
+                padding: "6px 8px",
+                background: colors.washiCard,
+                borderLeft: `3px solid ${colour}`,
+                fontSize: "0.7rem",
+              }}
+            >
+              <div style={{ fontWeight: 700, fontFamily: "var(--font-display)", marginBottom: 2 }}>
+                RECOMMENDED ACTION:
+              </div>
+              <div style={{ opacity: 0.85 }}>{sitrep.recommended_action}</div>
+            </div>
+            <div style={{ display: "flex", justifyContent: "flex-end", fontSize: "0.65rem", fontFamily: "var(--font-mono)", opacity: 0.6 }}>
+              AI Confidence: {(sitrep.confidence * 100).toFixed(0)}%
+            </div>
+          </div>
+        ) : (
+          <div style={{ fontSize: "0.75rem", opacity: 0.7 }}>
+            Select a sector to generate tactical brief.
+          </div>
+        )}
+      </div>
     </div>
   );
 }
+

@@ -68,14 +68,19 @@ async def submit_report(body: ReportSubmission):
         population=30000,
     )
 
+    # Synthesize cluster reports using Groq Llama 3.3
+    cluster_texts = [r.get("text", "") for r in cluster_reports if r.get("text")]
+    cluster_summary = await dedupe.summarize_cluster_reports(cluster_texts)
+
     evidence = {
         "report_count": report_count,
         "image_result": img_result,
         "rainfall_mm_h": store.rainfall.get("zone-001", 0.0),
         "sources": list({r.get("source", "citizen") for r in cluster_reports}),
+        "ai_cluster_summary": cluster_summary,
     }
 
-    recommended = _recommend(verification, severity_tier)
+    recommended = _recommend(verification, severity_tier, cluster_summary)
 
     # 6. Create or update incident
     existing_incident = next(
@@ -113,12 +118,18 @@ async def submit_report(body: ReportSubmission):
     return report
 
 
-def _recommend(status: str, severity: str) -> str:
+def _recommend(status: str, severity: str, summary: str = "") -> str:
+    base = ""
     if status == "verified" and severity == "critical":
-        return "Dispatch rescue team immediately. Initiate evacuation of affected zone."
-    if status in ("verified", "probable") and severity == "warning":
-        return "Pre-position rescue teams. Monitor closely. Consider evacuation advisory."
-    return "Continue monitoring. Assign observation team to assess."
+        base = "Dispatch rescue team immediately. Initiate evacuation of affected zone."
+    elif status in ("verified", "probable") and severity == "warning":
+        base = "Pre-position rescue teams. Monitor closely. Consider evacuation advisory."
+    else:
+        base = "Continue monitoring. Assign observation team to assess."
+
+    if summary and len(summary) > 10:
+        return f"{base} AI Cluster Brief: {summary[:120]}"
+    return base
 
 
 def _incident_payload(inc: dict) -> dict:

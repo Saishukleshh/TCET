@@ -25,6 +25,19 @@ export async function fetchZoneRisk() {
   return apiFetch<{ type: "FeatureCollection"; features: any[] }>("/risk/zones");
 }
 
+export async function fetchZoneSitrep(zoneId: string) {
+  return apiFetch<{
+    zone_id: string;
+    risk_level: string;
+    summary: string;
+    recommended_action: string;
+    confidence: number;
+    evidence: Record<string, any>;
+    generated_at: string;
+    model: string;
+  }>(`/risk/sitrep/${encodeURIComponent(zoneId)}`);
+}
+
 export async function fetchIncidents() {
   return apiFetch<any[]>("/incidents");
 }
