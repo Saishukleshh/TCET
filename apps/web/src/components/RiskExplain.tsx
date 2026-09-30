@@ -130,7 +130,7 @@ export default function RiskExplain({
             <div key={key} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
               <span style={{ width: 140, opacity: 0.85, fontFamily: "var(--font-body)" }}>{FACTOR_LABELS[key]}</span>
               <div style={{ flex: 1, background: colors.washiMuted, height: 6, border: `1px solid ${colors.ink}`, overflow: "hidden" }}>
-                <div style={{ width: `${(val * 100).toFixed(0)}%`, height: "100%", background: colour }} />
+                <div style={{ width: `${(contribution * 100).toFixed(0)}%`, height: "100%", background: colour }} />
               </div>
               <span style={{ width: 38, textAlign: "right", fontFamily: "var(--font-mono)", fontWeight: 700 }}>
                 {(contribution * 100).toFixed(0)}%

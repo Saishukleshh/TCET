@@ -101,7 +101,11 @@ export async function allocateResources(incident_ids: string[]) {
 }
 
 export async function approveAlert(alertId: string, approvedBy: string = "Command Officer 1") {
-  return apiFetch<any>(`/alerts/${encodeURIComponent(alertId)}/approve`, {
+  await apiFetch<any>(`/alerts/${encodeURIComponent(alertId)}/approve`, {
+    method: "POST",
+    body: JSON.stringify({ approved_by: approvedBy }),
+  });
+  return apiFetch<any>(`/alerts/${encodeURIComponent(alertId)}/send`, {
     method: "POST",
     body: JSON.stringify({ approved_by: approvedBy }),
   });

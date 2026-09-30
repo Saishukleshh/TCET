@@ -94,7 +94,7 @@ export default function EvidencePanel({
             </span>
           </div>
           <div style={{ fontSize: "0.75rem", color: colors.ink, opacity: 0.6, fontFamily: "var(--font-mono)" }}>
-            Coordinates: {incident.lat.toFixed(4)}°N, {incident.lng.toFixed(4)}°E
+            Coordinates: {incident.lat.toFixed(4)}°N, {incident.lng.toFixed(4)}°E /
           </div>
         </div>
 

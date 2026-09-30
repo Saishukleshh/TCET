@@ -45,6 +45,7 @@ incidents: list[dict] = []
 blocked_roads: list[dict] = []
 alerts: list[dict] = []
 events: list[dict] = []
+assignments: list[dict] = []
 
 # Current rainfall intensity per zone (zone_id → mm/h)
 rainfall: dict[str, float] = {
@@ -164,7 +165,7 @@ def get_active_blocked_roads() -> list[dict]:
 # ── Demo reset ────────────────────────────────────────────────────────────
 
 def reset() -> None:
-    global shelters, teams, reports, incidents, blocked_roads, alerts, events, rainfall
+    global shelters, teams, reports, incidents, blocked_roads, alerts, events, assignments, rainfall
     shelters = deepcopy(_SHELTERS_SEED)
     teams = deepcopy(_TEAMS_SEED)
     reports.clear()
@@ -172,6 +173,7 @@ def reset() -> None:
     blocked_roads.clear()
     alerts.clear()
     events.clear()
+    assignments.clear()
     for zone_id in rainfall:
         rainfall[zone_id] = 0.0
 

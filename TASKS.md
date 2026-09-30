@@ -18,6 +18,7 @@ Owners: **A** frontend + map, **B** backend + data, **C** AI + routing, **D** PP
 
 ## Phase 2: Intelligence (C + B)
 - [x] C: Flood-risk score with factor breakdown; `GET /risk/zones`
+- [x] C: Scope incident-density risk and SitRep evidence to the selected zone
 - [x] A: Zone colouring + `RiskExplain` panel
 - [x] B/C: `POST /reports`: store, cluster (dedupe), create/update incident
 - [x] C: Confidence logic; photo verification with fallback
@@ -34,6 +35,17 @@ Owners: **A** frontend + map, **B** backend + data, **C** AI + routing, **D** PP
 - [x] A: `/report` mobile form (location, photo, depth chips) and result screen
 - [x] D/B: `/simulate` panel + endpoints (rain, 23 reports, block road, reset)
 - [x] D: Script the 10:42 -> 10:52 scenario end to end
+
+ ## Phase 4b: Multilingual alerts (B + A), 
+- [x] B: Add translations (jsonb) column to alerts; schema + migration
+- [x] B: services/translate.py: LLM call returning {"hi","mr"} JSON, cache on the alert, fall back to data/alert_templates.json
+- [x] B: Fill placeholders ({zone}, {avoid}, {shelter}) and keep English + Hindi + Marathi together in the alert payload
+- [x] B: Translate only after approval (or as an editable draft before approval)
+- [x] A: PhonePreview + LanguageTabs components (EN / हिन्दी / मराठी) with WhatsApp/SMS-style bubble
+- [x] A: Add 'Noto Sans Devanagari' to the preview font stack (Impact/Anton have no Devanagari glyphs)
+- [x] A: Show the preview on the approval card after Approve and on /report
+- [x] Test: LLM failure returns the hardcoded templates; Devanagari renders with no boxes; message under ~300 characters
+- [ ] Review: a native Hindi and Marathi speaker checks the hardcoded text
 
 ## Phase 5: PPT and demo (D + all)
 - [ ] Slide 1: title hero visual

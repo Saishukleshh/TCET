@@ -176,6 +176,12 @@ class EvacuationRoute(BaseModel):
 
 # ── Alerts ───────────────────────────────────────────────────────────────────
 
+class AlertTranslations(BaseModel):
+    en: str
+    hi: str
+    mr: str
+
+
 class Alert(BaseModel):
     id: str
     tier: AlertTier
@@ -183,6 +189,7 @@ class Alert(BaseModel):
     message: str
     status: AlertStatus
     approved_by: Optional[str] = None
+    translations: Optional[AlertTranslations] = None
     created_at: datetime
 
 

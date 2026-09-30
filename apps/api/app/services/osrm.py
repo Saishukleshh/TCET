@@ -29,7 +29,8 @@ def _segments_intersect(p1, p2, p3, p4) -> bool:
     d2 = cross(p3, p4, p2)
     d3 = cross(p1, p2, p3)
     d4 = cross(p1, p2, p4)
-    if ((d1 > 0 < d2) or (d1 < 0 > d2)) and ((d3 > 0 < d4) or (d3 < 0 > d4)):
+    if ((d1 > 0 and d2 < 0) or (d1 < 0 and d2 > 0)) and \
+       ((d3 > 0 and d4 < 0) or (d3 < 0 and d4 > 0)):
         return True
     return False
 
@@ -56,13 +57,19 @@ async def get_route(
     to_lng: float, to_lat: float,
     blocked_roads: list[dict],
 ) -> dict:
-    """Return an EvacuationRoute dict."""
-    # Try OSRM
+    """
+    Return an EvacuationRoute dict.
+    1. Query OSRM HTTP API for routes and alternative candidates with turn-by-turn steps.
+    2. Check each candidate route against active blocked roads/flood polygons.
+    3. Return fastest unblocked safe route.
+    4. If OSRM is unreachable, select the closest unblocked precomputed demo route.
+    """
+    # 1. Try OSRM HTTP API
     try:
         url = (
             f"{_OSRM_BASE}/route/v1/driving/"
             f"{from_lng},{from_lat};{to_lng},{to_lat}"
-            "?alternatives=3&geometries=geojson&overview=full"
+            "?alternatives=3&geometries=geojson&overview=full&steps=true"
         )
         async with httpx.AsyncClient(timeout=6.0) as client:
             resp = await client.get(url)
@@ -74,36 +81,79 @@ async def get_route(
             geom = route["geometry"]
             coords = _linestring_coords(geom)
             if not _route_intersects_blocked(coords, blocked_roads):
+                # Extract turn-by-turn maneuvers if available
+                steps = []
+                for leg in route.get("legs", []):
+                    for step in leg.get("steps", []):
+                        name = step.get("name", "")
+                        maneuver = step.get("maneuver", {}).get("type", "")
+                        dist = step.get("distance", 0)
+                        if name or maneuver:
+                            steps.append({
+                                "instruction": f"{maneuver.capitalize()} onto {name}" if name else maneuver.capitalize(),
+                                "distance_m": round(dist, 1),
+                            })
+
                 return {
                     "status": "safe",
                     "geom": geom,
-                    "distance_m": route["distance"],
-                    "duration_sec": route["duration"],
+                    "distance_m": round(route["distance"], 1),
+                    "duration_sec": round(route["duration"], 1),
                     "warning_message": None,
+                    "steps": steps,
                 }
-        # All routes blocked
-        return {"status": "no_safe_route", "geom": None, "distance_m": None,
-                "duration_sec": None, "warning_message": "All routes intersect blocked areas."}
 
-    except Exception:
-        # Fall back to precomputed demo routes
-        from app.db.store import get_all_demo_routes
-        demo = list(get_all_demo_routes().values())
-        if demo:
-            r = demo[0]
-            coords = _linestring_coords(r.get("geom", {}))
-            if not _route_intersects_blocked(coords, blocked_roads):
-                return {
-                    "status": "safe",
-                    "geom": r["geom"],
-                    "distance_m": r["distance_m"],
-                    "duration_sec": r["duration_sec"],
-                    "warning_message": "Using precomputed fallback route.",
-                }
+        # All OSRM routes intersect blocked areas
         return {
             "status": "no_safe_route",
             "geom": None,
             "distance_m": None,
             "duration_sec": None,
-            "warning_message": "OSRM unavailable and no precomputed route matches.",
+            "warning_message": "All calculated routes intersect active flood or blocked road zones.",
+            "steps": [],
+        }
+
+    except Exception:
+        # 2. Fall back to precomputed demo routes (find closest unblocked match)
+        from app.db.store import get_all_demo_routes
+        demo_routes = list(get_all_demo_routes().values())
+
+        best_route = None
+        min_dist = float("inf")
+
+        for r in demo_routes:
+            geom = r.get("geom", {})
+            coords = _linestring_coords(geom)
+            if not coords:
+                continue
+
+            if not _route_intersects_blocked(coords, blocked_roads):
+                # Calculate distance from requested endpoints to demo route endpoints
+                start_c = coords[0]
+                end_c = coords[-1]
+                delta = (
+                    math.hypot(start_c[0] - from_lng, start_c[1] - from_lat) +
+                    math.hypot(end_c[0] - to_lng, end_c[1] - to_lat)
+                )
+                if delta < min_dist:
+                    min_dist = delta
+                    best_route = r
+
+        if best_route:
+            return {
+                "status": "safe",
+                "geom": best_route["geom"],
+                "distance_m": best_route["distance_m"],
+                "duration_sec": best_route["duration_sec"],
+                "warning_message": "Using verified precomputed emergency corridor.",
+                "steps": best_route.get("steps", []),
+            }
+
+        return {
+            "status": "no_safe_route",
+            "geom": None,
+            "distance_m": None,
+            "duration_sec": None,
+            "warning_message": "Routing engine unavailable and no precomputed corridor matches.",
+            "steps": [],
         }

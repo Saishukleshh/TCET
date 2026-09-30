@@ -1,6 +1,7 @@
 "use client";
 
 import { colors, severityColor } from "@/lib/design-tokens";
+import PhonePreview, { AlertTranslations } from "./PhonePreview";
 
 export interface PendingAlert {
   id: string;
@@ -8,6 +9,7 @@ export interface PendingAlert {
   zone_id: string;
   message: string;
   status: "pending" | "approved" | "sent" | "rejected";
+  translations?: AlertTranslations | null;
   created_at?: string;
 }
 
@@ -25,6 +27,7 @@ export default function ApprovalCard({
   isLoading = false,
 }: ApprovalCardProps) {
   const tierColor = severityColor[alert.tier] ?? colors.vermilion;
+  const isApproved = alert.status === "approved" || alert.status === "sent";
 
   return (
     <div
@@ -37,7 +40,7 @@ export default function ApprovalCard({
         color: colors.ink,
       }}
     >
-      {/* Red Seal / Hanko Header */}
+      {/* Header */}
       <div
         style={{
           display: "flex",
@@ -85,75 +88,114 @@ export default function ApprovalCard({
         </span>
       </div>
 
-      {/* Message content */}
+      {/* English message */}
       <p
         style={{
           fontFamily: "var(--font-body)",
           fontSize: "0.95rem",
           color: colors.ink,
           lineHeight: 1.5,
-          marginBottom: "var(--space-3)",
+          marginBottom: "var(--space-2)",
         }}
       >
         {alert.message}
       </p>
 
+      {/* Phone preview with language tabs — shown when translations are available */}
+      {alert.translations && (
+        <div style={{ marginBottom: "var(--space-3)" }}>
+          <div
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "0.7rem",
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              opacity: 0.6,
+              marginBottom: 6,
+            }}
+          >
+            CITIZEN BROADCAST PREVIEW
+          </div>
+          <PhonePreview translations={alert.translations} tier={alert.tier} />
+        </div>
+      )}
+
       {/* Protocol Banner */}
-      <div
-        style={{
-          background: colors.washiMuted,
-          borderLeft: `4px solid ${colors.indigo}`,
-          padding: "8px 12px",
-          marginBottom: "var(--space-3)",
-          fontSize: "0.8rem",
-          color: colors.ink,
-          lineHeight: 1.4,
-        }}
-      >
-        Strict Human-in-the-Loop Protocol: Emergency broadcast and field resource dispatch mandate authorized commander signature.
-      </div>
+      {!isApproved && (
+        <div
+          style={{
+            background: colors.washiMuted,
+            borderLeft: `4px solid ${colors.indigo}`,
+            padding: "8px 12px",
+            marginBottom: "var(--space-3)",
+            fontSize: "0.8rem",
+            color: colors.ink,
+            lineHeight: 1.4,
+          }}
+        >
+          Strict Human-in-the-Loop Protocol: Emergency broadcast and field resource dispatch mandate authorized commander signature.
+        </div>
+      )}
 
       {/* Actions */}
-      <div style={{ display: "flex", gap: "var(--space-2)" }}>
-        <button
-          onClick={() => onApprove(alert.id)}
-          disabled={isLoading}
-          style={{
-            flex: 2,
-            background: colors.vermilion,
-            color: "#FAF4E8",
-            fontFamily: "var(--font-display)",
-            fontSize: "0.95rem",
-            fontWeight: 800,
-            letterSpacing: "0.06em",
-            padding: "10px 16px",
-            border: `2px solid ${colors.ink}`,
-            boxShadow: `3px 3px 0 ${colors.ink}`,
-            cursor: isLoading ? "not-allowed" : "pointer",
-          }}
-        >
-          {isLoading ? "AUTHORIZING..." : "AFFIX SEAL & TRANSMIT"}
-        </button>
+      {!isApproved ? (
+        <div style={{ display: "flex", gap: "var(--space-2)" }}>
+          <button
+            onClick={() => onApprove(alert.id)}
+            disabled={isLoading}
+            style={{
+              flex: 2,
+              background: colors.vermilion,
+              color: "#FAF4E8",
+              fontFamily: "var(--font-display)",
+              fontSize: "0.95rem",
+              fontWeight: 800,
+              letterSpacing: "0.06em",
+              padding: "10px 16px",
+              border: `2px solid ${colors.ink}`,
+              boxShadow: `3px 3px 0 ${colors.ink}`,
+              cursor: isLoading ? "not-allowed" : "pointer",
+            }}
+          >
+            {isLoading ? "AUTHORIZING..." : "AFFIX SEAL & TRANSMIT"}
+          </button>
 
-        <button
-          onClick={() => onReject(alert.id)}
-          disabled={isLoading}
+          <button
+            onClick={() => onReject(alert.id)}
+            disabled={isLoading}
+            style={{
+              flex: 1,
+              background: "transparent",
+              color: colors.ink,
+              fontFamily: "var(--font-display)",
+              fontSize: "0.85rem",
+              letterSpacing: "0.05em",
+              padding: "10px 12px",
+              border: `2px solid ${colors.ink}`,
+              boxShadow: `2px 2px 0 ${colors.ink}`,
+              cursor: isLoading ? "not-allowed" : "pointer",
+            }}
+          >
+            DISMISS
+          </button>
+        </div>
+      ) : (
+        <div
           style={{
-            flex: 1,
-            background: "transparent",
-            color: colors.ink,
+            background: colors.pine,
+            color: colors.washiCard,
             fontFamily: "var(--font-display)",
             fontSize: "0.85rem",
-            letterSpacing: "0.05em",
-            padding: "10px 12px",
+            fontWeight: 700,
+            padding: "8px 12px",
             border: `2px solid ${colors.ink}`,
-            boxShadow: `2px 2px 0 ${colors.ink}`,
-            cursor: isLoading ? "not-allowed" : "pointer",
+            letterSpacing: "0.06em",
+            textAlign: "center",
           }}
         >
-          DISMISS
-        </button>
-      </div>
+          SEAL AFFIXED · BROADCAST TRANSMITTED
+        </div>
+      )}
     </div>
   );
 }

@@ -1,18 +1,37 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { colors } from "@/lib/design-tokens";
-import { submitReport } from "@/lib/api-client";
+import { submitReport, fetchAlerts } from "@/lib/api-client";
+import PhonePreview, { AlertTranslations } from "@/components/PhonePreview";
 
 export default function ReportPage() {
   const [lat, setLat] = useState<number>(19.068);
   const [lng, setLng] = useState<number>(72.875);
+  const [locationLabel, setLocationLabel] = useState<string>("Kurla West (default)");
   const [depth, setDepth] = useState<"ankle" | "knee" | "waist+" | null>("knee");
   const [text, setText] = useState<string>("Water rapidly accumulating near railway station subway. Vehicles stalled.");
   const [photoSelected, setPhotoSelected] = useState<boolean>(true);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submittedResult, setSubmittedResult] = useState<any | null>(null);
+  const [sentAlert, setSentAlert] = useState<{ translations: AlertTranslations; tier: string } | null>(null);
+
+  useEffect(() => {
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setLat(pos.coords.latitude);
+        setLng(pos.coords.longitude);
+        setLocationLabel(`${pos.coords.latitude.toFixed(4)}°N, ${pos.coords.longitude.toFixed(4)}°E`);
+      },
+      () => {
+        // Permission denied or unavailable — keep hardcoded Kurla West fallback
+        setLocationLabel("Kurla West (GPS unavailable)");
+      },
+      { timeout: 8000 }
+    );
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +46,12 @@ export default function ReportPage() {
         source: "citizen",
       });
       setSubmittedResult(res);
+      // Fetch latest sent alert for multilingual preview
+      try {
+        const alerts = await fetchAlerts();
+        const latest = alerts.find((a: any) => a.status === "sent" && a.translations);
+        if (latest) setSentAlert({ translations: latest.translations, tier: latest.tier });
+      } catch {}
     } catch (err) {
       console.error("Submission error", err);
       alert("Error submitting report. Please verify connection.");
@@ -196,6 +221,36 @@ export default function ReportPage() {
               </div>
             </div>
 
+            {/* Active alert multilingual preview */}
+            {sentAlert && (
+              <div
+                style={{
+                  background: colors.washi,
+                  border: `2px solid ${colors.ink}`,
+                  padding: "12px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 8,
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "0.75rem",
+                    fontWeight: 700,
+                    color: colors.prussian,
+                    letterSpacing: "0.06em",
+                  }}
+                >
+                  ACTIVE EMERGENCY BROADCAST
+                </div>
+                <PhonePreview
+                  translations={sentAlert.translations}
+                  tier={sentAlert.tier as any}
+                />
+              </div>
+            )}
+
             <div style={{ display: "flex", gap: 12 }}>
               <button
                 onClick={() => setSubmittedResult(null)}
@@ -278,7 +333,7 @@ export default function ReportPage() {
                 <span style={{ fontFamily: "var(--font-display)", fontWeight: 700 }}>Telemetry Fix:</span>
               </div>
               <span style={{ fontFamily: "var(--font-mono)", color: colors.surface, fontWeight: 700 }}>
-                {lat.toFixed(4)}°N, {lng.toFixed(4)}°E (Kurla West)
+                {locationLabel}
               </span>
             </div>
 

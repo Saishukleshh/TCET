@@ -93,13 +93,13 @@ async def simulate_reports(body: SimulateReportsRequest):
 
     results = []
     for i in range(body.count):
-        # Cluster 17 near-duplicate reports within 100m, spread 6 further away
+        # Cluster 17 near-duplicate reports within 100m, spread 6 further but still within 150m radius
         if i < 17:
             dlng = random.uniform(-0.0005, 0.0005)
             dlat = random.uniform(-0.0005, 0.0005)
         else:
-            dlng = random.uniform(-0.002, 0.002)
-            dlat = random.uniform(-0.002, 0.002)
+            dlng = random.uniform(-0.0010, 0.0010)
+            dlat = random.uniform(-0.0010, 0.0010)
 
         submission = ReportSubmission(
             lat=cy + dlat,
@@ -136,7 +136,8 @@ async def simulate_block_road(body: SimulateBlockRoadRequest):
     from app.services.osrm import get_route
     blocked = store.get_active_blocked_roads()
     new_route = await get_route(72.8745, 19.0670, 72.8681, 19.0685, blocked)
-    await broadcast("route.recalculated", new_route)
+    if new_route["status"] == "safe":
+        await broadcast("route.recalculated", new_route)
 
     return {"ok": True, "road_id": road["id"], "new_route": new_route}
 

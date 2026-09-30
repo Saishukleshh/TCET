@@ -95,6 +95,7 @@ async def allocate_resources(body: AllocationRequest):
 
         store.update_team(team["id"], {"status": "assigned", "incident_id": inc["id"]})
         store.update_incident(inc["id"], {"assigned_team_id": team["id"]})
+        store.assignments.append(asn)
 
     store.log_event("resource.assigned", {"count": len(assignments)})
     await broadcast("resource.assigned", {"assignments": assignments})

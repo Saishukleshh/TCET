@@ -4,6 +4,7 @@ from fastapi import APIRouter, HTTPException
 from app.schemas import AlertApprovalRequest
 from app.db import store
 from app.ws import broadcast
+from app.services.translate import translate_alert
 
 router = APIRouter()
 
@@ -23,6 +24,7 @@ async def create_alert(body: dict):
         "message": body.get("message", ""),
         "status": "pending",
         "approved_by": None,
+        "translations": None,
     })
     store.log_event("alert.pending", alert)
     await broadcast("alert.pending", alert)
@@ -37,7 +39,33 @@ async def approve_alert(alert_id: str, body: AlertApprovalRequest):
     if alert["status"] != "pending":
         raise HTTPException(400, f"Alert is already '{alert['status']}'")
 
-    store.update_alert(alert_id, {"status": "approved", "approved_by": body.approved_by})
+    # Translate after approval, before broadcast
+    zone_name = alert.get("zone_id", "affected area")
+    translations = await translate_alert(
+        message_en=alert["message"],
+        tier=alert.get("tier", "warning"),
+        zone=zone_name,
+    )
+    store.update_alert(alert_id, {
+        "status": "approved",
+        "approved_by": body.approved_by,
+        "translations": translations,
+    })
+    alert = store.get_alert(alert_id)
+    store.log_event("alert.approved", alert)
+    await broadcast("alert.approved", alert)
+    return alert
+
+
+@router.post("/{alert_id}/send")
+async def send_alert(alert_id: str, body: AlertApprovalRequest):
+    """Transmit an approved alert to citizens. Requires prior approval."""
+    alert = store.get_alert(alert_id)
+    if not alert:
+        raise HTTPException(404, "Alert not found")
+    if alert["status"] != "approved":
+        raise HTTPException(400, f"Alert must be 'approved' before sending; current status: '{alert['status']}'")
+
     store.update_alert(alert_id, {"status": "sent"})
     alert = store.get_alert(alert_id)
     store.log_event("alert.sent", alert)

@@ -1,8 +1,8 @@
 """routes/risk.py — GET /risk/zones and GET /risk/sitrep/{zone_id}"""
 from fastapi import APIRouter, HTTPException
-from app.ai.risk import score_all_zones
+from app.ai.risk import score_all_zones, count_incidents_in_zone
 from app.ai.sitrep import generate_situation_brief
-from app.db.store import get_zones, get_zone, rainfall, incidents, shelters, teams
+from app.db.store import get_zones, get_zone, rainfall, shelters, teams
 
 router = APIRouter()
 
@@ -47,7 +47,7 @@ async def get_zone_sitrep(zone_id: str):
     rain = float(rainfall.get(zone_id, 0.0))
 
     # Relevant counts
-    inc_count = len(incidents)
+    inc_count = count_incidents_in_zone(zone)
     open_shelters = len([s for s in shelters if s.get("status") == "open"])
     avail_teams = len([t for t in teams if t.get("status") == "available"])
 
@@ -75,6 +75,7 @@ async def get_zone_sitrep(zone_id: str):
         "confidence": 0.94 if is_groq_available() else 0.88,
         "evidence": {
             "rainfall_mm_h": rain,
+            "risk_factors": score.get("factors", {}),
             "incident_count": inc_count,
             "open_shelters": open_shelters,
             "available_teams": avail_teams,

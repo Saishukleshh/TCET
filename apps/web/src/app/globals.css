@@ -8,7 +8,7 @@
    ============================================================ */
 
 /* ── Google Fonts (Must be at the very top) ─────────────────── */
-@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap");
 
 @import "tailwindcss";
 

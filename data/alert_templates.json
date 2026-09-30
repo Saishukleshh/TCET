@@ -1,0 +1,17 @@
+{
+  "critical": {
+    "en": "CRITICAL FLOOD ALERT for {zone}. Avoid {avoid}. Proceed immediately to {shelter} via verified safe corridors. Follow rescue team instructions.",
+    "hi": "{zone} के लिए अत्यंत गंभीर बाढ़ चेतावनी। {avoid} से बचें। तुरंत {shelter} की ओर सुरक्षित मार्ग से जाएं। बचाव दल के निर्देशों का पालन करें।",
+    "mr": "{zone} साठी अत्यंत गंभीर पूर इशारा। {avoid} टाळा। त्वरित {shelter} कडे सुरक्षित मार्गाने जा. बचाव पथकाच्या सूचनांचे पालन करा."
+  },
+  "warning": {
+    "en": "FLOOD WARNING for {zone}. Water levels rising on {avoid}. Move to higher ground or shelter at {shelter}. Stay alert for updates.",
+    "hi": "{zone} के लिए बाढ़ की चेतावनी। {avoid} पर जलस्तर बढ़ रहा है। ऊंचे स्थान पर जाएं या {shelter} में शरण लें। अपडेट के लिए सतर्क रहें।",
+    "mr": "{zone} साठी पूर इशारा. {avoid} वर पाण्याची पातळी वाढत आहे. उंच ठिकाणी जा किंवा {shelter} मध्ये आश्रय घ्या. अपडेटसाठी सतर्क राहा."
+  },
+  "watch": {
+    "en": "FLOOD WATCH for {zone}. Monitor {avoid} closely. Be ready to evacuate to {shelter} if conditions worsen.",
+    "hi": "{zone} के लिए बाढ़ की निगरानी। {avoid} पर ध्यान दें। स्थिति बिगड़ने पर {shelter} की ओर जाने के लिए तैयार रहें।",
+    "mr": "{zone} साठी पूर निरीक्षण. {avoid} वर लक्ष ठेवा. परिस्थिती बिघडल्यास {shelter} कडे जाण्यास तयार राहा."
+  }
+}

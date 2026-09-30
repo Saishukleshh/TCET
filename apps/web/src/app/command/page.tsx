@@ -15,6 +15,7 @@ import IncidentQueue from "@/components/IncidentQueue";
 import RiskExplain from "@/components/RiskExplain";
 import EvidencePanel, { IncidentDetail } from "@/components/EvidencePanel";
 import ApprovalCard, { PendingAlert } from "@/components/ApprovalCard";
+import type { AlertTranslations } from "@/components/PhonePreview";
 import EventTimeline, { TimelineEvent } from "@/components/EventTimeline";
 import { useEvents } from "@/hooks/use-events";
 import {
@@ -207,6 +208,17 @@ export default function CommandPage() {
           if (prev.some((a) => a.id === payload.id)) return prev;
           return [payload as PendingAlert, ...prev];
         });
+        break;
+      }
+      case "alert.approved": {
+        // Update the alert in the pending list with translations so PhonePreview appears
+        setPendingAlerts((prev) =>
+          prev.map((a) =>
+            a.id === payload.id
+              ? { ...a, status: "approved", translations: payload.translations ?? null }
+              : a
+          )
+        );
         break;
       }
       case "alert.sent":

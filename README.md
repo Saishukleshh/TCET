@@ -19,7 +19,8 @@ Urban flooding is not merely a meteorological prediction problem—it is a criti
 1. **Information Silos**: Rainfall readings, social feeds, citizen distress calls, and shelter capacity arrive across isolated channels.
 2. **Duplicate & Unverified Noise**: 20+ citizens report the same inundated intersection simultaneously, overwhelming 911/emergency dispatchers.
 3. **Deadly Route Traps**: Evacuation paths computed minutes prior become impassable as water levels breach arterial roadways.
-4. **Delayed Decisions**: The friction between detecting an anomaly and dispatching rescue boats costs lives.
+4. **Delayed Decisions**: The friction between
+ detecting an anomaly and dispatching rescue boats costs lives.
 
 **AEGISFLOW** unifies fragmented real-time telemetry into a singular, verified operational picture—automating incident deduplication, explaining flood risk, dynamically routing around hazard boundaries, and optimizing emergency resource allocation with human-in-the-loop governance.
 

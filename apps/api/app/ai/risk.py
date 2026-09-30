@@ -8,6 +8,7 @@ Start rule-based — swap in XGBoost only if time allows.
 
 from __future__ import annotations
 from datetime import datetime, timezone
+from shapely.geometry import Point, shape
 from app.db import store
 
 # Max rainfall considered for normalisation (mm/h)
@@ -26,13 +27,26 @@ def _low_elevation_score(elevation_m: float) -> float:
     return 1.0 - (elevation_m / LOW_ELEVATION_THRESHOLD)
 
 
-def _incident_density(zone_id: str) -> float:
-    """Count active incidents near a zone (simple: any incident counts for now)."""
-    count = sum(
-        1 for inc in store.incidents
-        if inc.get("zone_id") == zone_id or True  # refine with geo in Phase 2
-    )
-    # Normalise: 0 → 0, 5+ → 1
+def count_incidents_in_zone(zone_feature: dict) -> int:
+    """Count incidents whose reported point falls inside the zone polygon."""
+    zone_polygon = shape(zone_feature["geometry"])
+    count = 0
+    for incident in store.incidents:
+        coordinates = incident.get("geom", {}).get("coordinates")
+        if not isinstance(coordinates, (list, tuple)) or len(coordinates) < 2:
+            continue
+        try:
+            point = Point(float(coordinates[0]), float(coordinates[1]))
+        except (TypeError, ValueError):
+            continue
+        if zone_polygon.covers(point):
+            count += 1
+    return count
+
+
+def _incident_density(zone_feature: dict) -> float:
+    """Normalize incidents in this zone: 0 to 0, 5+ to 1."""
+    count = count_incidents_in_zone(zone_feature)
     return min(count / 5.0, 1.0)
 
 
@@ -45,7 +59,7 @@ def score_zone(zone_feature: dict) -> dict:
     r_rain   = _rain_norm(rain)
     r_elev   = _low_elevation_score(props["elevation_m"])
     r_hist   = props["history_score"]
-    r_dens   = _incident_density(zone_id)
+    r_dens   = _incident_density(zone_feature)
 
     # Weighted sum
     risk = (0.40 * r_rain + 0.25 * r_elev + 0.20 * r_hist + 0.15 * r_dens)
