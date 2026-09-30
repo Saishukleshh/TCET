@@ -105,13 +105,13 @@ export default function ResponderPage() {
       </header>
 
       {/* Main Body */}
-      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+      <div className="flex flex-col md:flex-row flex-1 overflow-auto md:overflow-hidden">
         {/* Left Mission Card Panel */}
         <div
+          className="w-full md:w-[440px] md:min-w-[360px] border-b-2 md:border-b-0 md:border-r-2 shrink-0"
           style={{
-            width: 440,
             background: colors.washi,
-            borderRight: `3px solid ${colors.ink}`,
+            borderColor: colors.ink,
             padding: "var(--space-3)",
             display: "flex",
             flexDirection: "column",
@@ -238,6 +238,7 @@ export default function ResponderPage() {
                     fontFamily: "var(--font-display)",
                     fontSize: "0.8rem",
                     letterSpacing: "0.05em",
+                    minHeight: 44,
                     background: status === st.key ? st.col : colors.washiCard,
                     color: status === st.key ? st.textColor : colors.ink,
                     border: `2px solid ${colors.ink}`,
@@ -272,7 +273,7 @@ export default function ResponderPage() {
         </div>
 
         {/* Right Map View */}
-        <div style={{ flex: 1, position: "relative" }}>
+        <div className="flex-1 relative w-full min-h-[400px] md:min-h-0">
           <MapView
             route={route}
             shelters={[

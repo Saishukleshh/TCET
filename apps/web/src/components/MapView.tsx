@@ -124,14 +124,15 @@ export default function MapView({
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
-    let map: MapLibreMap;
+    let isMounted = true;
 
     import("maplibre-gl").then((maplibregl) => {
+      if (!isMounted || !containerRef.current) return;
       maplibreglRef.current = maplibregl;
       const { Map, NavigationControl } = maplibregl;
 
-      map = new Map({
-        container: containerRef.current!,
+      const map = new Map({
+        container: containerRef.current,
         style: {
           version: 8,
           sources: {
@@ -395,15 +396,22 @@ export default function MapView({
         });
 
         setLoaded(true);
-        onMapLoad?.(map);
       });
 
+      if (!isMounted) {
+        map?.remove();
+        return;
+      }
       mapRef.current = map;
     });
 
     return () => {
-      mapRef.current?.remove();
-      mapRef.current = null;
+      isMounted = false;
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+      setLoaded(false);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

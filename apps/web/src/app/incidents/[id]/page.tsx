@@ -152,7 +152,7 @@ export default function IncidentDetailPage({ params }: Props) {
             </div>
           )}
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Left: Evidence & Action Panel */}
             <div>
               <EvidencePanel

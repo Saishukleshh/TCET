@@ -3,16 +3,18 @@
  * All calls are relative to NEXT_PUBLIC_API_URL.
  */
 
-const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+const RAW_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+const BASE = RAW_BASE.replace(/\/+$/, "");
 
 export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${BASE}${path}`, {
+  const cleanPath = path.startsWith("/") ? path : `/${path}`;
+  const res = await fetch(`${BASE}${cleanPath}`, {
     headers: { "Content-Type": "application/json" },
     ...init,
   });
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    throw new Error(`API ${path} → ${res.status}: ${text}`);
+    throw new Error(`API ${cleanPath} → ${res.status}: ${text}`);
   }
   return res.json() as Promise<T>;
 }
@@ -28,7 +30,7 @@ export async function fetchIncidents() {
 }
 
 export async function fetchIncident(id: string) {
-  return apiFetch<any>(`/incidents/${id}`);
+  return apiFetch<any>(`/incidents/${encodeURIComponent(id)}`);
 }
 
 export async function fetchShelters() {
@@ -40,7 +42,7 @@ export async function fetchTeams() {
 }
 
 export async function fetchAlerts() {
-  return apiFetch<any[]>("/alerts");
+  return apiFetch<any[]>("/alerts/");
 }
 
 export async function fetchEvents() {
@@ -69,7 +71,12 @@ export async function computeEvacuationRoute(data: {
 }) {
   return apiFetch<any>("/routes/evacuation", {
     method: "POST",
-    body: JSON.stringify(data),
+    body: JSON.stringify({
+      from_lat: data.from_lat,
+      from_lng: data.from_lng,
+      to_lat: data.to_lat,
+      to_lng: data.to_lng,
+    }),
   });
 }
 
@@ -81,14 +88,14 @@ export async function allocateResources(incident_ids: string[]) {
 }
 
 export async function approveAlert(alertId: string, approvedBy: string = "Command Officer 1") {
-  return apiFetch<any>(`/alerts/${alertId}/approve`, {
+  return apiFetch<any>(`/alerts/${encodeURIComponent(alertId)}/approve`, {
     method: "POST",
     body: JSON.stringify({ approved_by: approvedBy }),
   });
 }
 
 export async function rejectAlert(alertId: string, approvedBy: string = "Command Officer 1") {
-  return apiFetch<any>(`/alerts/${alertId}/reject`, {
+  return apiFetch<any>(`/alerts/${encodeURIComponent(alertId)}/reject`, {
     method: "POST",
     body: JSON.stringify({ approved_by: approvedBy }),
   });

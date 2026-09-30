@@ -208,8 +208,10 @@ export default function SimulatePage() {
       <div
         style={{
           display: "flex",
+          flexWrap: "wrap",
           justifyContent: "space-between",
           alignItems: "center",
+          gap: 16,
           marginBottom: "var(--space-4)",
           borderBottom: `2.5px solid ${colors.ink}`,
           paddingBottom: "var(--space-2)",
@@ -284,10 +286,8 @@ export default function SimulatePage() {
       {/* Live State Summary Bar */}
       {state && (
         <div
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3"
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(6, 1fr)",
-            gap: 12,
             marginBottom: "var(--space-4)",
             background: colors.washiCard,
             padding: "12px 16px",

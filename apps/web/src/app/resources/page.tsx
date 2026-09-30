@@ -88,8 +88,10 @@ export default function ResourcesPage() {
       <div
         style={{
           display: "flex",
+          flexWrap: "wrap",
           justifyContent: "space-between",
           alignItems: "center",
+          gap: 16,
           marginBottom: "var(--space-4)",
           borderBottom: `2px solid ${colors.ink}`,
           paddingBottom: "var(--space-2)",
@@ -190,7 +192,7 @@ export default function ResourcesPage() {
           Loading resource registries...
         </div>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Evacuation Shelters Section */}
           <div>
             <div

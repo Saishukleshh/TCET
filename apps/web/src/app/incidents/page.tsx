@@ -110,7 +110,8 @@ export default function IncidentsPage() {
       <div
         style={{
           display: "flex",
-          gap: 20,
+          flexWrap: "wrap",
+          gap: 12,
           marginBottom: "var(--space-3)",
           background: colors.washiCard,
           padding: "12px 16px",
@@ -118,7 +119,7 @@ export default function IncidentsPage() {
           boxShadow: `3px 3px 0 ${colors.ink}`,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8 }}>
           <span style={{ fontSize: "0.75rem", fontWeight: 700, fontFamily: "var(--font-display)" }}>
             SEVERITY:
           </span>
@@ -132,7 +133,8 @@ export default function IncidentsPage() {
                 fontFamily: "var(--font-display)",
                 fontSize: "0.75rem",
                 fontWeight: 700,
-                padding: "5px 12px",
+                padding: "6px 12px",
+                minHeight: 36,
                 border: `1.5px solid ${colors.ink}`,
                 boxShadow: filterSev === s ? `2px 2px 0 ${colors.ink}` : "none",
                 cursor: "pointer",
@@ -143,7 +145,7 @@ export default function IncidentsPage() {
           ))}
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8 }}>
           <span style={{ fontSize: "0.75rem", fontWeight: 700, fontFamily: "var(--font-display)" }}>
             VERIFICATION:
           </span>
@@ -157,7 +159,8 @@ export default function IncidentsPage() {
                 fontFamily: "var(--font-display)",
                 fontSize: "0.75rem",
                 fontWeight: 700,
-                padding: "5px 12px",
+                padding: "6px 12px",
+                minHeight: 36,
                 border: `1.5px solid ${colors.ink}`,
                 boxShadow: filterStat === st ? `2px 2px 0 ${colors.ink}` : "none",
                 cursor: "pointer",
@@ -188,7 +191,7 @@ export default function IncidentsPage() {
           </div>
         </div>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))", gap: 16 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 320px), 1fr))", gap: 16 }}>
           {filtered.map((inc) => {
             const sevCol = severityColor[inc.severity] ?? colors.vermilion;
             const statCol = confidenceColor[inc.status] ?? colors.pine;

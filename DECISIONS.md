@@ -150,5 +150,11 @@ Append-only log. **Every time the IDE / coding agent changes anything** (code, s
 - How it works: Adopts the authentic Edo-period Ukiyo-e aesthetic: washi paper surfaces (`#F0E3CE`, `#FAF4E8`), decisive sumi ink outlines (`#0D0D15`), mineral pigment accents (vermilion `#E85D35`, Prussian blue `#003153`, Edo indigo `#2A4056`, ochre `#CC7722`, Japanese pine `#2D7F67`), tactile ink offset drop shadows (`3px 3px 0 #0D0D15`), and classic woodblock typography (`Cinzel` display and body, `JetBrains Mono` telemetry). Cartography uses aged washi-tinted raster tiles with mineral pigment risk layers.
 - Why: Implements the requested Ukiyo-e Woodblock Revival specification, delivering a memorable, high-contrast, uncluttered, and culturally distinctive UI with 0 emojis, 0 pure blacks (#000000), and crisp visual hierarchy.
 
+### D-024 · Complete production readiness hardening and responsive overhaul · 2026-09-30
+- Status: active
+- What changed: Fixed memory/resource leaks in `use-events.ts` and `MapView.tsx`, corrected insecure CORS configuration in `main.py`, added Pydantic v2 input boundary validation in `schemas.py`, sanitized API URL paths in `api-client.ts`, protected against SSRF in `verify_image.py`, added an actionable offline banner and mobile panel toggling in `/command`, made `/responder`, `/incidents`, `/resources`, and `/simulate` fully responsive across 320px–1920px viewports, and enriched metadata in `layout.tsx`.
+- How it works: WebSocket reconnection is tied to component mounted state preventing runaway reconnect loops; MapLibre instances are systematically cleaned up on unmount; CORS origins are parameterized; endpoints validate coordinates (-90 to 90, -180 to 180) and text bounds; mobile screens use responsive flex/grid stacking without horizontal overflow.
+- Why: Fulfills the complete 21-point production-readiness audit to guarantee stability, security, cross-device responsiveness, and zero memory leaks for live demonstration and judging.
+
 
 

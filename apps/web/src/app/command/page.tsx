@@ -18,6 +18,7 @@ import ApprovalCard, { PendingAlert } from "@/components/ApprovalCard";
 import EventTimeline, { TimelineEvent } from "@/components/EventTimeline";
 import { useEvents } from "@/hooks/use-events";
 import {
+  apiFetch,
   fetchZoneRisk,
   fetchIncidents,
   fetchIncident,
@@ -51,6 +52,7 @@ export default function CommandPage() {
   // Weather / Rain controls
   const [rainIntensity, setRainIntensity] = useState<number>(0);
   const [activeTab, setActiveTab] = useState<"queue" | "risk" | "evidence">("queue");
+  const [mobilePanelOpen, setMobilePanelOpen] = useState(false);
 
   // Layer toggles
   const [showZones, setShowZones] = useState(true);
@@ -225,7 +227,7 @@ export default function CommandPage() {
     }
   }, [loadInitialData]);
 
-  const { status: wsStatus } = useEvents(handleWsMessage);
+  const { status: wsStatus, reconnect } = useEvents(handleWsMessage);
 
   const handleApproveAlert = async (alertId: string) => {
     try {
@@ -282,15 +284,17 @@ export default function CommandPage() {
         style={{
           background: colors.washiCard,
           borderBottom: `2.5px solid ${colors.ink}`,
-          padding: "var(--space-1) var(--space-3)",
+          padding: "8px 16px",
           display: "flex",
+          flexWrap: "wrap",
           justifyContent: "space-between",
           alignItems: "center",
+          gap: 10,
           zIndex: 100,
         }}
       >
         {/* Brand & Hanko Seal */}
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12 }}>
           <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
             <span
               style={{
@@ -319,7 +323,7 @@ export default function CommandPage() {
           </div>
 
           {/* Navigation Links */}
-          <nav style={{ display: "flex", gap: 6, marginLeft: 16 }}>
+          <nav style={{ display: "flex", flexWrap: "wrap", gap: 6, overflowX: "auto" }}>
             {[
               { href: "/command", label: "COMMAND", active: true },
               { href: "/incidents", label: "INCIDENTS" },
@@ -333,16 +337,17 @@ export default function CommandPage() {
                 href={nav.href}
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontSize: "0.8rem",
+                  fontSize: "0.75rem",
                   fontWeight: 700,
                   letterSpacing: "0.05em",
-                  padding: "5px 12px",
+                  padding: "5px 10px",
                   background: nav.active ? colors.vermilion : colors.washiMuted,
                   color: nav.active ? "#FAF4E8" : colors.ink,
                   border: `2px solid ${colors.ink}`,
                   boxShadow: nav.active ? `2px 2px 0 ${colors.ink}` : "none",
                   textDecoration: "none",
                   transition: "all 150ms ease",
+                  whiteSpace: "nowrap",
                 }}
               >
                 {nav.label}
@@ -352,7 +357,7 @@ export default function CommandPage() {
         </div>
 
         {/* Status Indicators & Rain Quick-Control */}
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 10 }}>
           {/* Rainfall quick pill */}
           <div
             style={{
@@ -448,11 +453,69 @@ export default function CommandPage() {
               {wsStatus === "connected" ? "LIVE TELEMETRY" : wsStatus.toUpperCase()}
             </span>
           </div>
+
+          {/* Mobile Panel Toggle */}
+          <button
+            onClick={() => setMobilePanelOpen((prev) => !prev)}
+            className="md:hidden"
+            style={{
+              background: mobilePanelOpen ? colors.vermilion : colors.washiMuted,
+              color: mobilePanelOpen ? "#FAF4E8" : colors.ink,
+              border: `2px solid ${colors.ink}`,
+              boxShadow: `2px 2px 0 ${colors.ink}`,
+              padding: "4px 10px",
+              fontFamily: "var(--font-display)",
+              fontSize: "0.75rem",
+              fontWeight: 700,
+              cursor: "pointer",
+            }}
+          >
+            {mobilePanelOpen ? "SHOW MAP" : "SHOW PANEL"}
+          </button>
         </div>
       </header>
 
+      {/* ── Offline Reconnection Status Banner ──────────────────── */}
+      {wsStatus !== "connected" && (
+        <div
+          style={{
+            background: wsStatus === "connecting" ? colors.ochre : colors.vermilion,
+            color: "#FAF4E8",
+            padding: "5px 16px",
+            fontSize: "0.75rem",
+            fontFamily: "var(--font-display)",
+            fontWeight: 700,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            borderBottom: `2px solid ${colors.ink}`,
+            zIndex: 90,
+          }}
+        >
+          <span>
+            {wsStatus === "connecting"
+              ? "CONNECTING TO LIVE TELEMETRY GRID..."
+              : "TELEMETRY DISCONNECTED · REAL-TIME EVENTS PAUSED"}
+          </span>
+          <button
+            onClick={reconnect}
+            style={{
+              background: colors.washiCard,
+              color: colors.ink,
+              border: `1.5px solid ${colors.ink}`,
+              padding: "2px 8px",
+              fontSize: "0.7rem",
+              fontWeight: 700,
+              cursor: "pointer",
+            }}
+          >
+            RECONNECT
+          </button>
+        </div>
+      )}
+
       {/* ── Main Workspace ────────────────────────────────────── */}
-      <div style={{ display: "flex", flex: 1, position: "relative", overflow: "hidden" }}>
+      <div className="flex flex-col md:flex-row flex-1 relative overflow-hidden">
         {/* Left Map Area */}
         <div style={{ flex: 1, position: "relative", height: "100%" }}>
           <MapView
@@ -580,11 +643,12 @@ export default function CommandPage() {
 
         {/* Right Operations Panel */}
         <aside
+          className={`${mobilePanelOpen ? "flex" : "hidden"} md:flex`}
           style={{
-            width: 420,
+            width: "clamp(320px, 35vw, 440px)",
+            maxWidth: "100%",
             background: colors.washiCard,
             borderLeft: `2.5px solid ${colors.ink}`,
-            display: "flex",
             flexDirection: "column",
             overflow: "hidden",
             zIndex: 15,
@@ -784,9 +848,7 @@ export default function CommandPage() {
                 onAllocateTeam={handleAllocateTeams}
                 onTriggerAlert={async (iid) => {
                   try {
-                    const alert = await (
-                      await import("@/lib/api-client")
-                    ).apiFetch<any>("/alerts/", {
+                    const alert = await apiFetch<any>("/alerts/", {
                       method: "POST",
                       body: JSON.stringify({
                         tier: selectedIncidentDetail.severity,

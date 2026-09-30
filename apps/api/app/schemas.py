@@ -36,12 +36,12 @@ class GeoLineString(BaseModel):
 # ── Reports ─────────────────────────────────────────────────────────────────
 
 class ReportSubmission(BaseModel):
-    lat: float
-    lng: float
-    text: str
-    image_url: Optional[str] = None
+    lat: float = Field(..., ge=-90.0, le=90.0, description="Latitude in decimal degrees")
+    lng: float = Field(..., ge=-180.0, le=180.0, description="Longitude in decimal degrees")
+    text: str = Field(..., min_length=1, max_length=2000, description="Citizen report observation")
+    image_url: Optional[str] = Field(default=None, max_length=1000)
     depth_hint: Optional[DepthHint] = None
-    source: str = "citizen"  # set to "simulated" for injected rows
+    source: str = Field(default="citizen", max_length=50)  # set to "simulated" for injected rows
 
 
 class Report(BaseModel):
@@ -150,7 +150,7 @@ class Assignment(BaseModel):
 
 
 class AllocationRequest(BaseModel):
-    incident_ids: list[str]
+    incident_ids: list[str] = Field(..., min_length=1, max_length=100)
 
 
 class AllocationResult(BaseModel):
@@ -160,10 +160,10 @@ class AllocationResult(BaseModel):
 # ── Routing ─────────────────────────────────────────────────────────────────
 
 class EvacuationRouteRequest(BaseModel):
-    from_lng: float
-    from_lat: float
-    to_lng: float
-    to_lat: float
+    from_lng: float = Field(..., ge=-180.0, le=180.0)
+    from_lat: float = Field(..., ge=-90.0, le=90.0)
+    to_lng: float = Field(..., ge=-180.0, le=180.0)
+    to_lat: float = Field(..., ge=-90.0, le=90.0)
 
 
 class EvacuationRoute(BaseModel):
@@ -187,7 +187,7 @@ class Alert(BaseModel):
 
 
 class AlertApprovalRequest(BaseModel):
-    approved_by: str
+    approved_by: str = Field(..., min_length=1, max_length=100)
 
 
 # ── Events ───────────────────────────────────────────────────────────────────
@@ -206,8 +206,8 @@ class SimulateRainRequest(BaseModel):
 
 
 class SimulateReportsRequest(BaseModel):
-    count: int = 23
-    zone_id: Optional[str] = None
+    count: int = Field(default=23, ge=1, le=200)
+    zone_id: Optional[str] = Field(default=None, max_length=100)
 
 
 class SimulateBlockRoadRequest(BaseModel):
