@@ -38,40 +38,48 @@ export default function ResponderPage() {
   return (
     <div
       style={{
-        minHeight: "100dvh",
         display: "flex",
         flexDirection: "column",
         background: colors.washi,
         color: colors.ink,
+        flex: 1,
+        minHeight: 0,
+        width: "100%",
       }}
+      className="overflow-y-auto md:overflow-hidden h-auto md:h-[calc(100dvh-56px)]"
     >
-      {/* Top Header */}
+      {/* Tactical Sub-Header */}
       <header
         style={{
           background: colors.surface,
-          borderBottom: `3px solid ${colors.ink}`,
-          padding: "var(--space-2) var(--space-3)",
+          borderBottom: `2.5px solid ${colors.ink}`,
+          padding: "8px 16px",
           display: "flex",
+          flexWrap: "wrap",
           justifyContent: "space-between",
           alignItems: "center",
+          gap: 10,
+          zIndex: 20,
+          flexShrink: 0,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <span
             style={{
               display: "inline-block",
-              width: 14,
-              height: 14,
+              width: 10,
+              height: 10,
               borderRadius: "50%",
               background: colors.pine,
               border: `2px solid ${colors.washi}`,
+              boxShadow: `0 0 6px ${colors.pine}`,
             }}
           />
           <div>
             <div
               style={{
                 fontFamily: "var(--font-hero)",
-                fontSize: "1.2rem",
+                fontSize: "clamp(0.95rem, 3vw, 1.15rem)",
                 fontWeight: 700,
                 color: colors.washi,
                 letterSpacing: "0.06em",
@@ -79,137 +87,125 @@ export default function ResponderPage() {
             >
               TACTICAL UNIT: RESCUE ALPHA (TEAM-001)
             </div>
-            <div style={{ fontSize: "0.75rem", color: colors.ochre, fontFamily: "var(--font-mono)" }}>
+            <div style={{ fontSize: "0.7rem", color: colors.ochre, fontFamily: "var(--font-mono)" }}>
               FIELD RESPONDER HUD · MISSION ACTIVE · SAFE CORRIDOR ENGAGED
             </div>
           </div>
         </div>
 
-        <Link
-          href="/command"
+        <span
           style={{
+            border: `1.5px solid ${colors.vermilion}`,
+            color: colors.vermilion,
+            background: colors.washiCard,
             fontFamily: "var(--font-display)",
-            padding: "8px 16px",
-            background: colors.vermilion,
-            color: colors.washi,
-            textDecoration: "none",
-            fontSize: "0.85rem",
-            fontWeight: 700,
-            border: `2px solid ${colors.ink}`,
-            boxShadow: `2px 2px 0 ${colors.ink}`,
-            letterSpacing: "0.06em",
+            fontSize: "0.7rem",
+            fontWeight: 800,
+            padding: "2px 8px",
+            letterSpacing: "0.08em",
           }}
         >
-          COMMAND CENTER →
-        </Link>
+          LIVE FIELD GPS
+        </span>
       </header>
 
       {/* Main Body */}
-      <div className="flex flex-col md:flex-row flex-1 overflow-auto md:overflow-hidden">
-        {/* Left Mission Card Panel */}
-        <div
-          className="w-full md:w-[440px] md:min-w-[360px] border-b-2 md:border-b-0 md:border-r-2 shrink-0"
-          style={{
-            background: colors.washi,
-            borderColor: colors.ink,
-            padding: "var(--space-3)",
-            display: "flex",
-            flexDirection: "column",
-            gap: "var(--space-3)",
-            overflowY: "auto",
-          }}
-        >
-          {/* Mission Objective Card */}
-          <div
-            style={{
-              background: colors.washiCard,
-              border: `3px solid ${colors.ink}`,
-              boxShadow: `4px 4px 0 ${colors.ink}`,
-              padding: "var(--space-3)",
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-              <span
+      <div className="flex flex-col md:grid md:grid-cols-[440px_1fr] flex-1 min-h-0">
+        {/* Left Column for desktop / Order-separated for mobile */}
+        <div className="contents md:flex md:flex-col md:w-[440px] md:border-r-2 md:border-[#0D0D15] md:overflow-y-auto md:p-3 md:gap-3 shrink-0">
+          {/* 1. Mission Objective Card */}
+          <div className="order-1 p-3 md:p-0">
+            <div
+              style={{
+                background: colors.washiCard,
+                border: `3px solid ${colors.ink}`,
+                boxShadow: `4px 4px 0 ${colors.ink}`,
+                padding: "var(--space-3)",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                <span
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    color: colors.vermilion,
+                    fontSize: "0.9rem",
+                    fontWeight: 700,
+                    letterSpacing: "0.08em",
+                  }}
+                >
+                  MISSION DISPATCH DIRECTIVE
+                </span>
+                <span
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    background: colors.vermilion,
+                    color: colors.washi,
+                    fontSize: "0.7rem",
+                    fontWeight: 700,
+                    padding: "3px 8px",
+                    border: `1.5px solid ${colors.ink}`,
+                    letterSpacing: "0.06em",
+                  }}
+                >
+                  CRITICAL
+                </span>
+              </div>
+
+              <div
                 style={{
-                  fontFamily: "var(--font-display)",
-                  color: colors.vermilion,
-                  fontSize: "0.9rem",
+                  fontFamily: "var(--font-hero)",
+                  fontSize: "1.15rem",
                   fontWeight: 700,
-                  letterSpacing: "0.08em",
+                  color: colors.surface,
+                  marginBottom: 6,
                 }}
               >
-                MISSION DISPATCH DIRECTIVE
-              </span>
-              <span
+                Evacuation & Rescue — Kurla West Cluster
+              </div>
+
+              <p style={{ fontSize: "0.85rem", fontFamily: "var(--font-body)", lineHeight: 1.5, margin: "0 0 12px 0" }}>
+                17 corroborating citizen reports confirm deep street waterlogging and stalled vehicles. Proceed via
+                verified safe corridor avoiding inundated LBS Marg arterial.
+              </p>
+
+              <div
                 style={{
-                  fontFamily: "var(--font-display)",
-                  background: colors.vermilion,
-                  color: colors.washi,
-                  fontSize: "0.7rem",
-                  fontWeight: 700,
-                  padding: "3px 8px",
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: 8,
+                  background: colors.washi,
                   border: `1.5px solid ${colors.ink}`,
-                  letterSpacing: "0.06em",
+                  padding: "10px 12px",
+                  fontSize: "0.75rem",
+                  fontFamily: "var(--font-mono)",
                 }}
               >
-                CRITICAL
-              </span>
-            </div>
-
-            <div
-              style={{
-                fontFamily: "var(--font-hero)",
-                fontSize: "1.15rem",
-                fontWeight: 700,
-                color: colors.surface,
-                marginBottom: 6,
-              }}
-            >
-              Evacuation & Rescue — Kurla West Cluster
-            </div>
-
-            <p style={{ fontSize: "0.85rem", fontFamily: "var(--font-body)", lineHeight: 1.5, margin: "0 0 12px 0" }}>
-              17 corroborating citizen reports confirm deep street waterlogging and stalled vehicles. Proceed via
-              verified safe corridor avoiding inundated LBS Marg arterial.
-            </p>
-
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: 8,
-                background: colors.washi,
-                border: `1.5px solid ${colors.ink}`,
-                padding: "10px 12px",
-                fontSize: "0.75rem",
-                fontFamily: "var(--font-mono)",
-              }}
-            >
-              <div>
-                <span style={{ opacity: 0.65, fontFamily: "var(--font-display)", fontSize: "0.7rem" }}>DESTINATION:</span>
-                <div style={{ color: colors.indigo, fontWeight: 700, fontSize: "0.85rem" }}>Dharavi Shelter</div>
-              </div>
-              <div>
-                <span style={{ opacity: 0.65, fontFamily: "var(--font-display)", fontSize: "0.7rem" }}>CAPACITY:</span>
-                <div style={{ color: colors.pine, fontWeight: 700, fontSize: "0.85rem" }}>300 (Open)</div>
-              </div>
-              <div>
-                <span style={{ opacity: 0.65, fontFamily: "var(--font-display)", fontSize: "0.7rem" }}>SAFE CORRIDOR:</span>
-                <div style={{ color: colors.ink, fontWeight: 700, fontSize: "0.85rem" }}>
-                  {routeInfo ? `${(routeInfo.distance_m / 1000).toFixed(1)} km` : "1.2 km"}
+                <div>
+                  <span style={{ opacity: 0.65, fontFamily: "var(--font-display)", fontSize: "0.7rem" }}>DESTINATION:</span>
+                  <div style={{ color: colors.indigo, fontWeight: 700, fontSize: "0.85rem" }}>Dharavi Shelter</div>
                 </div>
-              </div>
-              <div>
-                <span style={{ opacity: 0.65, fontFamily: "var(--font-display)", fontSize: "0.7rem" }}>EST. TIME:</span>
-                <div style={{ color: colors.ochre, fontWeight: 700, fontSize: "0.85rem" }}>
-                  {routeInfo ? `~${Math.round(routeInfo.duration_sec / 60)} min` : "~7 min"}
+                <div>
+                  <span style={{ opacity: 0.65, fontFamily: "var(--font-display)", fontSize: "0.7rem" }}>CAPACITY:</span>
+                  <div style={{ color: colors.pine, fontWeight: 700, fontSize: "0.85rem" }}>300 (Open)</div>
+                </div>
+                <div>
+                  <span style={{ opacity: 0.65, fontFamily: "var(--font-display)", fontSize: "0.7rem" }}>SAFE CORRIDOR:</span>
+                  <div style={{ color: colors.ink, fontWeight: 700, fontSize: "0.85rem" }}>
+                    {routeInfo ? `${(routeInfo.distance_m / 1000).toFixed(1)} km` : "1.2 km"}
+                  </div>
+                </div>
+                <div>
+                  <span style={{ opacity: 0.65, fontFamily: "var(--font-display)", fontSize: "0.7rem" }}>EST. TIME:</span>
+                  <div style={{ color: colors.ochre, fontWeight: 700, fontSize: "0.85rem" }}>
+                    {routeInfo ? `~${Math.round(routeInfo.duration_sec / 60)} min` : "~7 min"}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Operational Status Control Buttons */}
-          <div>
+          {/* 3. Operational Status Controls */}
+          <div className="order-3 p-3 md:p-0">
             <div
               style={{
                 fontFamily: "var(--font-display)",
@@ -222,7 +218,7 @@ export default function ResponderPage() {
             >
               FIELD RESPONDER OPERATIONAL STATUS
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: 8 }}>
               {[
                 { key: "assigned", label: "ASSIGNED", col: colors.ochre, textColor: colors.ink },
                 { key: "en_route", label: "EN ROUTE", col: colors.vermilion, textColor: colors.washi },
@@ -253,27 +249,29 @@ export default function ResponderPage() {
             </div>
           </div>
 
-          {/* Safe Corridor Protocol Note */}
-          <div
-            style={{
-              background: colors.washiCard,
-              border: `2px solid ${colors.pine}`,
-              padding: "12px",
-              fontSize: "0.8rem",
-              lineHeight: 1.5,
-              boxShadow: `2px 2px 0 ${colors.ink}`,
-            }}
-          >
-            <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, color: colors.pine, marginBottom: 4 }}>
-              DYNAMIC EVACUATION ROUTING
+          {/* 4. Safe Corridor Protocol Note */}
+          <div className="order-4 p-3 md:p-0">
+            <div
+              style={{
+                background: colors.washiCard,
+                border: `2px solid ${colors.pine}`,
+                padding: "12px",
+                fontSize: "0.8rem",
+                lineHeight: 1.5,
+                boxShadow: `2px 2px 0 ${colors.ink}`,
+              }}
+            >
+              <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, color: colors.pine, marginBottom: 4 }}>
+                DYNAMIC EVACUATION ROUTING
+              </div>
+              Our OSRM engine automatically computes corridors around flooded hazard polygons and blocked segments.
+              If route conditions deteriorate, the path recalculates avoiding all active flood polygons.
             </div>
-            Our OSRM engine automatically computes corridors around flooded hazard polygons and blocked segments.
-            If route conditions deteriorate, the path recalculates avoiding all active flood polygons.
           </div>
         </div>
 
-        {/* Right Map View */}
-        <div className="flex-1 relative w-full min-h-[400px] md:min-h-0">
+        {/* 2. Map View: Order 2 on mobile, right column on desktop */}
+        <div className="order-2 md:order-none w-full h-[380px] min-h-[340px] md:h-full relative shrink-0">
           <MapView
             route={route}
             shelters={[
@@ -314,5 +312,6 @@ export default function ResponderPage() {
         </div>
       </div>
     </div>
+
   );
 }

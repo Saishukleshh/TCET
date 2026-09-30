@@ -114,7 +114,7 @@ export default function RiskExplain({
 
       {/* Risk bar */}
       <div style={{ background: colors.washiMuted, height: 8, marginBottom: "var(--space-3)", border: `1px solid ${colors.ink}`, overflow: "hidden" }}>
-        <div style={{ width: `${(risk * 100).toFixed(0)}%`, height: "100%", background: colour, transition: "width 600ms ease-out" }} />
+        <div style={{ width: `${((risk ?? 0) * 100).toFixed(0)}%`, height: "100%", background: colour, transition: "width 600ms ease-out" }} />
       </div>
 
       {/* Factor breakdown */}
@@ -123,8 +123,8 @@ export default function RiskExplain({
           FACTOR CONTRIBUTION ANALYSIS
         </div>
         {(Object.keys(WEIGHTS) as (keyof RiskFactors)[]).map((key) => {
-          const val = factors[key];
-          const weight = WEIGHTS[key];
+          const val = factors?.[key] ?? 0;
+          const weight = WEIGHTS[key] ?? 0.25;
           const contribution = val * weight;
           return (
             <div key={key} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
@@ -142,9 +142,10 @@ export default function RiskExplain({
 
       {/* Metadata */}
       <div style={{ marginTop: "var(--space-2)", borderTop: `1px solid ${colors.washiMuted}`, paddingTop: 8, display: "flex", justifyContent: "space-between", fontSize: "0.75rem", fontFamily: "var(--font-mono)" }}>
-        <span>Precip: {rainfallMmH.toFixed(1)} mm/h</span>
-        <span>Exposed: {populationExposed.toLocaleString()}</span>
+        <span>Precip: {(rainfallMmH ?? 0).toFixed(1)} mm/h</span>
+        <span>Exposed: {(populationExposed ?? 0).toLocaleString()}</span>
       </div>
+
 
       {/* AI Tactical Situation Brief (SitRep) */}
       <div

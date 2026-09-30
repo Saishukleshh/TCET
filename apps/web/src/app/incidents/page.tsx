@@ -41,32 +41,35 @@ export default function IncidentsPage() {
   return (
     <div
       style={{
-        minHeight: "100dvh",
+        minHeight: "100%",
         background: colors.washi,
         color: colors.ink,
-        padding: "var(--space-4)",
+        padding: "clamp(12px, 3vw, 24px)",
       }}
     >
       {/* Header bar */}
       <div
         style={{
           display: "flex",
+          flexWrap: "wrap",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "var(--space-4)",
-          borderBottom: `2.5px solid ${colors.ink}`,
+          gap: 12,
+          marginBottom: "var(--space-3)",
+          borderBottom: `2px solid ${colors.ink}`,
           paddingBottom: "var(--space-2)",
         }}
       >
-        <div>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
+        <div style={{ flex: 1, minWidth: "min(100%, 280px)" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 10 }}>
             <h1
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "var(--text-h1)",
+                fontSize: "clamp(1.3rem, 3.5vw, 2.1rem)",
                 color: colors.ink,
-                letterSpacing: "0.06em",
+                letterSpacing: "0.05em",
                 margin: 0,
+                lineHeight: 1.2,
               }}
             >
               INCIDENT TRIAGE QUEUE
@@ -75,102 +78,94 @@ export default function IncidentsPage() {
               style={{
                 fontFamily: "var(--font-display)",
                 fontSize: "0.75rem",
-                border: `2px solid ${colors.vermilion}`,
+                border: `1.5px solid ${colors.vermilion}`,
                 color: colors.vermilion,
                 padding: "2px 8px",
                 fontWeight: 800,
+                whiteSpace: "nowrap",
               }}
             >
               {filtered.length} SECTORS RECORDED
             </span>
           </div>
-          <p style={{ margin: "4px 0 0", opacity: 0.7, fontSize: "0.85rem", fontFamily: "var(--font-body)" }}>
+          <p style={{ margin: "6px 0 0", opacity: 0.75, fontSize: "0.85rem", fontFamily: "var(--font-body)", lineHeight: 1.4 }}>
             Real-time clustering and verification. Duplicated citizen distress reports consolidated into singular operational incidents.
           </p>
         </div>
-
-        <Link
-          href="/command"
-          style={{
-            fontFamily: "var(--font-display)",
-            fontWeight: 700,
-            padding: "8px 16px",
-            background: colors.vermilion,
-            color: "#FAF4E8",
-            textDecoration: "none",
-            border: `2px solid ${colors.ink}`,
-            boxShadow: `3px 3px 0 ${colors.ink}`,
-          }}
-        >
-          ← COMMAND MAP
-        </Link>
       </div>
 
       {/* Filter Chips */}
       <div
         style={{
           display: "flex",
-          flexWrap: "wrap",
+          flexDirection: "column",
           gap: 12,
           marginBottom: "var(--space-3)",
           background: colors.washiCard,
-          padding: "12px 16px",
+          padding: "12px 14px",
           border: `2px solid ${colors.ink}`,
           boxShadow: `3px 3px 0 ${colors.ink}`,
         }}
       >
         <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: "0.75rem", fontWeight: 700, fontFamily: "var(--font-display)" }}>
+          <span style={{ fontSize: "0.75rem", fontWeight: 800, fontFamily: "var(--font-display)", minWidth: 90 }}>
             SEVERITY:
           </span>
-          {["all", "critical", "warning", "watch"].map((s) => (
-            <button
-              key={s}
-              onClick={() => setFilterSev(s)}
-              style={{
-                background: filterSev === s ? colors.vermilion : colors.washiMuted,
-                color: filterSev === s ? "#FAF4E8" : colors.ink,
-                fontFamily: "var(--font-display)",
-                fontSize: "0.75rem",
-                fontWeight: 700,
-                padding: "6px 12px",
-                minHeight: 36,
-                border: `1.5px solid ${colors.ink}`,
-                boxShadow: filterSev === s ? `2px 2px 0 ${colors.ink}` : "none",
-                cursor: "pointer",
-              }}
-            >
-              {s.toUpperCase()}
-            </button>
-          ))}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+            {["all", "critical", "warning", "watch"].map((s) => (
+              <button
+                key={s}
+                onClick={() => setFilterSev(s)}
+                style={{
+                  background: filterSev === s ? colors.vermilion : colors.washiMuted,
+                  color: filterSev === s ? "#FAF4E8" : colors.ink,
+                  fontFamily: "var(--font-display)",
+                  fontSize: "0.75rem",
+                  fontWeight: 700,
+                  padding: "6px 12px",
+                  minHeight: 38,
+                  border: `1.5px solid ${colors.ink}`,
+                  boxShadow: filterSev === s ? `2px 2px 0 ${colors.ink}` : "none",
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {s.toUpperCase()}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: "0.75rem", fontWeight: 700, fontFamily: "var(--font-display)" }}>
+          <span style={{ fontSize: "0.75rem", fontWeight: 800, fontFamily: "var(--font-display)", minWidth: 90 }}>
             VERIFICATION:
           </span>
-          {["all", "verified", "probable", "unverified"].map((st) => (
-            <button
-              key={st}
-              onClick={() => setFilterStat(st)}
-              style={{
-                background: filterStat === st ? colors.pine : colors.washiMuted,
-                color: filterStat === st ? "#FAF4E8" : colors.ink,
-                fontFamily: "var(--font-display)",
-                fontSize: "0.75rem",
-                fontWeight: 700,
-                padding: "6px 12px",
-                minHeight: 36,
-                border: `1.5px solid ${colors.ink}`,
-                boxShadow: filterStat === st ? `2px 2px 0 ${colors.ink}` : "none",
-                cursor: "pointer",
-              }}
-            >
-              {st.toUpperCase()}
-            </button>
-          ))}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+            {["all", "verified", "probable", "unverified"].map((st) => (
+              <button
+                key={st}
+                onClick={() => setFilterStat(st)}
+                style={{
+                  background: filterStat === st ? colors.pine : colors.washiMuted,
+                  color: filterStat === st ? "#FAF4E8" : colors.ink,
+                  fontFamily: "var(--font-display)",
+                  fontSize: "0.75rem",
+                  fontWeight: 700,
+                  padding: "6px 12px",
+                  minHeight: 38,
+                  border: `1.5px solid ${colors.ink}`,
+                  boxShadow: filterStat === st ? `2px 2px 0 ${colors.ink}` : "none",
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {st.toUpperCase()}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
+
 
       {/* Incident Cards Grid */}
       {loading ? (

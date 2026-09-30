@@ -78,10 +78,10 @@ export default function ResourcesPage() {
   return (
     <div
       style={{
-        minHeight: "100dvh",
+        minHeight: "100%",
         background: colors.washi,
         color: colors.ink,
-        padding: "var(--space-4)",
+        padding: "clamp(12px, 3vw, 24px)",
       }}
     >
       {/* Top Header */}
@@ -91,19 +91,19 @@ export default function ResourcesPage() {
           flexWrap: "wrap",
           justifyContent: "space-between",
           alignItems: "center",
-          gap: 16,
-          marginBottom: "var(--space-4)",
+          gap: 14,
+          marginBottom: "var(--space-3)",
           borderBottom: `2px solid ${colors.ink}`,
           paddingBottom: "var(--space-2)",
         }}
       >
-        <div>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <div style={{ flex: 1, minWidth: "min(100%, 280px)" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 10 }}>
             <span
               style={{
                 display: "inline-block",
                 padding: "2px 8px",
-                border: `2px solid ${colors.vermilion}`,
+                border: `1.5px solid ${colors.vermilion}`,
                 color: colors.vermilion,
                 fontFamily: "var(--font-display)",
                 fontWeight: 700,
@@ -116,27 +116,29 @@ export default function ResourcesPage() {
             <h1
               style={{
                 fontFamily: "var(--font-hero)",
-                fontSize: "1.75rem",
+                fontSize: "clamp(1.25rem, 3.5vw, 1.8rem)",
                 fontWeight: 700,
                 color: colors.surface,
                 letterSpacing: "0.04em",
                 margin: 0,
+                lineHeight: 1.2,
               }}
             >
               EMERGENCY RESOURCES & FIELD ALLOCATION
             </h1>
           </div>
-          <p style={{ margin: "4px 0 0", opacity: 0.75, fontSize: "0.85rem", fontFamily: "var(--font-body)" }}>
+          <p style={{ margin: "6px 0 0", opacity: 0.75, fontSize: "0.85rem", fontFamily: "var(--font-body)", lineHeight: 1.4 }}>
             Real-time shelter capacity tracking and bipartite algorithmic dispatch of rescue teams via Hungarian optimization.
           </p>
         </div>
 
-        <div style={{ display: "flex", gap: 12 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
           <button
             onClick={handleRunAllocation}
             style={{
               fontFamily: "var(--font-display)",
-              padding: "8px 18px",
+              padding: "10px 18px",
+              minHeight: 42,
               background: colors.vermilion,
               color: colors.washi,
               fontWeight: 700,
@@ -149,25 +151,9 @@ export default function ResourcesPage() {
           >
             OPTIMIZE DISPATCH (HUNGARIAN)
           </button>
-
-          <Link
-            href="/command"
-            style={{
-              fontFamily: "var(--font-display)",
-              padding: "8px 18px",
-              background: colors.washiCard,
-              color: colors.ink,
-              fontWeight: 700,
-              fontSize: "0.85rem",
-              textDecoration: "none",
-              border: `2px solid ${colors.ink}`,
-              boxShadow: `3px 3px 0 ${colors.ink}`,
-            }}
-          >
-            ← COMMAND MAP
-          </Link>
         </div>
       </div>
+
 
       {allocationMsg && (
         <div

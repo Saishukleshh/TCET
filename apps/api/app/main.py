@@ -8,7 +8,7 @@ from contextlib import asynccontextmanager
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routes import reports, incidents, risk, routing, allocate, alerts, simulate
+from app.routes import reports, incidents, risk, routing, allocate, alerts, simulate, chat
 from app.ws import router as ws_router, broadcast
 
 
@@ -58,6 +58,7 @@ app.include_router(routing.router,   prefix="/routes",    tags=["routing"])
 app.include_router(allocate.router,  prefix="/allocate",  tags=["allocate"])
 app.include_router(alerts.router,    prefix="/alerts",    tags=["alerts"])
 app.include_router(simulate.router,  prefix="/simulate",  tags=["simulate"])
+app.include_router(chat.router,      prefix="/chat",      tags=["chat"])
 
 # WebSocket
 app.include_router(ws_router)

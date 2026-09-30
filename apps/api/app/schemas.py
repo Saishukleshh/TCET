@@ -61,6 +61,7 @@ class Report(BaseModel):
 # ── Image verification ───────────────────────────────────────────────────────
 
 class ImageVerificationResult(BaseModel):
+    model_config = {"protected_namespaces": ()}
     shows_flooding: bool
     depth_estimate: Optional[str] = None
     confidence: float = Field(ge=0, le=1)

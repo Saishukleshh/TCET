@@ -92,49 +92,33 @@ export default function ReportPage() {
           }}
         >
           <div>
-            <span
+            <div
               style={{
                 fontFamily: "var(--font-hero)",
-                fontSize: "1.75rem",
+                fontSize: "clamp(1.25rem, 3.5vw, 1.65rem)",
                 fontWeight: 700,
                 color: colors.surface,
                 letterSpacing: "0.06em",
                 display: "block",
               }}
             >
-              AEGISFLOW
-            </span>
-            <div
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "0.8rem",
-                color: colors.vermilion,
-                letterSpacing: "0.08em",
-                fontWeight: 700,
-              }}
-            >
               CITIZEN FLOOD REPORTING DISPATCH
             </div>
+            <div
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "0.75rem",
+                color: colors.vermilion,
+                letterSpacing: "0.06em",
+                fontWeight: 700,
+                marginTop: 2,
+              }}
+            >
+              RAPID CROWDSOURCED HAZARD INGESTION GRID
+            </div>
           </div>
-
-          <Link
-            href="/command"
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "0.75rem",
-              fontWeight: 700,
-              color: colors.ink,
-              textDecoration: "none",
-              background: colors.washiCard,
-              border: `2px solid ${colors.ink}`,
-              boxShadow: `2px 2px 0 ${colors.ink}`,
-              padding: "6px 12px",
-              letterSpacing: "0.06em",
-            }}
-          >
-            COMMAND MAP →
-          </Link>
         </div>
+
 
         {submittedResult ? (
           /* Confirmation Result Card */
