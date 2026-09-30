@@ -46,3 +46,6 @@ Living project memory for humans and coding agents. Keep it short. Add a line wh
 - Next.js 15+ dynamic route params is a Promise — use async function Page({ params }: { params: Promise<...> }) and await params.
 - Tailwind v4 @import "tailwindcss" must follow any external @import url(...) font definitions in globals.css, or CSS parser errors occur.
 - MapLibre GL stylesheet must be explicitly imported in root layout.tsx (import "maplibre-gl/dist/maplibre-gl.css") for map canvas controls to position correctly.
+- OpenStreetMap raster tiles with raster-hue-rotate: 35, raster-saturation: -0.65, raster-contrast: 0.15 achieve an authentic warm washi paper woodblock cartography without CARTO watermarks or paid API keys.
+- Ukiyo-e woodblock styling requires sumi ink #0D0D15 instead of pure black #000000, and zero-blur offset drop shadows (3px 3px 0 #0D0D15) for tactile print depth.
+

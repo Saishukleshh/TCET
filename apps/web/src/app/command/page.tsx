@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { colors } from "@/lib/design-tokens";
 import MapView, {
@@ -75,7 +75,6 @@ export default function CommandPage() {
       if (zRes.status === "fulfilled" && zRes.value.features) {
         setZones(zRes.value.features);
         if (zRes.value.features.length > 0) {
-          // Default to highest risk zone
           const sorted = [...zRes.value.features].sort(
             (a, b) => (b.properties.risk ?? 0) - (a.properties.risk ?? 0)
           );
@@ -131,7 +130,6 @@ export default function CommandPage() {
     const { kind } = msg;
     const payload = msg.payload as any;
 
-    // Push to timeline
     setEvents((prev) => [{ ts: new Date().toISOString(), kind, payload }, ...prev.slice(0, 50)]);
 
     switch (kind) {
@@ -170,6 +168,7 @@ export default function CommandPage() {
           status: payload.status ?? "unverified",
           confidence: payload.confidence ?? 0,
           report_count: payload.report_count ?? 1,
+          created_at: payload.created_at,
           recommended_action: payload.recommended_action,
         };
 
@@ -214,7 +213,6 @@ export default function CommandPage() {
         break;
       }
       case "resource.assigned": {
-        // Refresh teams
         fetchTeams().then((t) => Array.isArray(t) && setTeams(t));
         break;
       }
@@ -229,7 +227,6 @@ export default function CommandPage() {
 
   const { status: wsStatus } = useEvents(handleWsMessage);
 
-  // Alert actions
   const handleApproveAlert = async (alertId: string) => {
     try {
       await approveAlert(alertId, "Command Center");
@@ -248,7 +245,6 @@ export default function CommandPage() {
     }
   };
 
-  // Team allocation
   const handleAllocateTeams = async () => {
     const ids = incidents.map((i) => i.id);
     if (!ids.length) return;
@@ -261,7 +257,6 @@ export default function CommandPage() {
     }
   };
 
-  // Rain slider
   const handleRainChange = async (mm: number) => {
     setRainIntensity(mm);
     try {
@@ -277,16 +272,16 @@ export default function CommandPage() {
         height: "100dvh",
         display: "flex",
         flexDirection: "column",
-        background: "var(--surface-base)",
-        color: "var(--color-branco)",
+        background: colors.washi,
+        color: colors.ink,
         overflow: "hidden",
       }}
     >
-      {/* ── Top Header ────────────────────────────────────────── */}
+      {/* ── Top Header Bar ────────────────────────────────────── */}
       <header
         style={{
-          background: "var(--surface-overlay)",
-          borderBottom: "2px solid var(--surface-border)",
+          background: colors.washiCard,
+          borderBottom: `2.5px solid ${colors.ink}`,
           padding: "var(--space-1) var(--space-3)",
           display: "flex",
           justifyContent: "space-between",
@@ -294,40 +289,43 @@ export default function CommandPage() {
           zIndex: 100,
         }}
       >
-        {/* Brand & Tagline */}
+        {/* Brand & Hanko Seal */}
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
             <span
               style={{
-                fontFamily: "var(--font-accent)",
-                fontSize: "1.75rem",
-                color: colors.amareloNeon,
+                fontFamily: "var(--font-display)",
+                fontSize: "1.6rem",
+                fontWeight: 900,
+                color: colors.ink,
                 letterSpacing: "0.08em",
-                textShadow: "3px 3px 0 #000",
               }}
             >
               AEGISFLOW
             </span>
             <span
               style={{
+                border: `2px solid ${colors.vermilion}`,
+                color: colors.vermilion,
                 fontFamily: "var(--font-display)",
-                fontSize: "0.75rem",
-                color: colors.rosaNeon,
-                letterSpacing: "0.15em",
+                fontSize: "0.7rem",
+                fontWeight: 800,
+                padding: "1px 6px",
+                letterSpacing: "0.1em",
               }}
             >
-              // COMMAND OPERATIONAL PICTURE
+              COMMAND
             </span>
           </div>
 
           {/* Navigation Links */}
-          <nav style={{ display: "flex", gap: 6, marginLeft: 20 }}>
+          <nav style={{ display: "flex", gap: 6, marginLeft: 16 }}>
             {[
               { href: "/command", label: "COMMAND", active: true },
               { href: "/incidents", label: "INCIDENTS" },
               { href: "/resources", label: "RESOURCES" },
               { href: "/responder", label: "RESPONDER" },
-              { href: "/report", label: "CITIZEN REPORT" },
+              { href: "/report", label: "CITIZEN PORTAL" },
               { href: "/simulate", label: "SIMULATOR" },
             ].map((nav) => (
               <Link
@@ -335,13 +333,14 @@ export default function CommandPage() {
                 href={nav.href}
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontSize: "0.75rem",
-                  letterSpacing: "0.08em",
-                  padding: "4px 10px",
-                  background: nav.active ? colors.amareloNeon : "var(--surface-card)",
-                  color: nav.active ? "#000" : "var(--color-branco)",
-                  border: nav.active ? "2px solid #000" : "1px solid var(--surface-border)",
-                  boxShadow: nav.active ? "2px 2px 0 #000" : "none",
+                  fontSize: "0.8rem",
+                  fontWeight: 700,
+                  letterSpacing: "0.05em",
+                  padding: "5px 12px",
+                  background: nav.active ? colors.vermilion : colors.washiMuted,
+                  color: nav.active ? "#FAF4E8" : colors.ink,
+                  border: `2px solid ${colors.ink}`,
+                  boxShadow: nav.active ? `2px 2px 0 ${colors.ink}` : "none",
                   textDecoration: "none",
                   transition: "all 150ms ease",
                 }}
@@ -353,25 +352,28 @@ export default function CommandPage() {
         </div>
 
         {/* Status Indicators & Rain Quick-Control */}
-        <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
           {/* Rainfall quick pill */}
           <div
             style={{
               display: "flex",
               alignItems: "center",
               gap: 8,
-              background: "var(--surface-card)",
-              border: `1px solid ${colors.azulFosco}`,
+              background: colors.washiMuted,
+              border: `2px solid ${colors.ink}`,
+              boxShadow: `2px 2px 0 ${colors.ink}`,
               padding: "4px 12px",
             }}
           >
-            <span style={{ fontSize: "0.85rem" }}>🌧</span>
+            <span style={{ fontSize: "0.75rem", fontFamily: "var(--font-display)", fontWeight: 700, color: colors.prussian }}>
+              PRECIP:
+            </span>
             <span
               style={{
                 fontFamily: "var(--font-mono)",
-                fontSize: "0.8rem",
-                color: colors.azulFosco,
-                fontWeight: 700,
+                fontSize: "0.85rem",
+                color: colors.prussian,
+                fontWeight: 800,
               }}
             >
               {rainIntensity.toFixed(1)} mm/h
@@ -383,8 +385,8 @@ export default function CommandPage() {
               step={5}
               value={rainIntensity}
               onChange={(e) => handleRainChange(Number(e.target.value))}
-              style={{ width: 80, cursor: "pointer", accentColor: colors.azulFosco }}
-              title="Drag to test dynamic rainfall"
+              style={{ width: 75, cursor: "pointer", accentColor: colors.prussian }}
+              title="Test dynamic precipitation"
             />
           </div>
 
@@ -392,58 +394,57 @@ export default function CommandPage() {
           <div style={{ display: "flex", gap: 8, fontSize: "0.75rem" }}>
             <span
               style={{
-                background: "rgba(255, 0, 0, 0.15)",
-                border: `1px solid ${colors.vermelho}`,
-                color: colors.vermelho,
-                padding: "2px 8px",
-                fontFamily: "var(--font-mono)",
-                fontWeight: 700,
+                background: colors.washiMuted,
+                border: `2px solid ${colors.ink}`,
+                color: colors.vermilion,
+                padding: "3px 8px",
+                fontFamily: "var(--font-display)",
+                fontWeight: 800,
+                boxShadow: `2px 2px 0 ${colors.ink}`,
               }}
             >
               {incidents.length} INCIDENTS
             </span>
             <span
               style={{
-                background: "rgba(255, 16, 240, 0.15)",
-                border: `1px solid ${colors.rosaNeon}`,
-                color: colors.rosaNeon,
-                padding: "2px 8px",
-                fontFamily: "var(--font-mono)",
-                fontWeight: 700,
+                background: colors.washiMuted,
+                border: `2px solid ${colors.ink}`,
+                color: colors.pine,
+                padding: "3px 8px",
+                fontFamily: "var(--font-display)",
+                fontWeight: 800,
+                boxShadow: `2px 2px 0 ${colors.ink}`,
               }}
             >
-              {teams.filter((t) => t.status === "available").length}/{teams.length} TEAMS READY
+              {teams.filter((t) => t.status === "available").length}/{teams.length} UNITS READY
             </span>
           </div>
 
-          {/* WebSocket Pulse */}
+          {/* Telemetry Pulse */}
           <div
             style={{
               display: "flex",
               alignItems: "center",
               gap: 6,
-              fontSize: "0.7rem",
-              fontFamily: "var(--font-mono)",
+              fontSize: "0.75rem",
+              fontFamily: "var(--font-display)",
+              fontWeight: 700,
             }}
           >
             <span
               style={{
                 width: 8,
                 height: 8,
-                borderRadius: "50%",
                 background:
                   wsStatus === "connected"
-                    ? colors.verdeNeon
+                    ? colors.pine
                     : wsStatus === "connecting"
-                    ? colors.amareloNeon
-                    : colors.vermelho,
-                boxShadow:
-                  wsStatus === "connected"
-                    ? `0 0 8px ${colors.verdeNeon}`
-                    : "none",
+                    ? colors.ochre
+                    : colors.vermilion,
+                border: `1px solid ${colors.ink}`,
               }}
             />
-            <span style={{ opacity: 0.7 }}>
+            <span style={{ opacity: 0.8 }}>
               {wsStatus === "connected" ? "LIVE TELEMETRY" : wsStatus.toUpperCase()}
             </span>
           </div>
@@ -484,73 +485,75 @@ export default function CommandPage() {
               top: 16,
               left: 16,
               zIndex: 10,
-              background: "rgba(17, 17, 17, 0.92)",
-              backdropFilter: "blur(6px)",
-              border: "2px solid #000",
-              boxShadow: "4px 4px 0 #000",
-              padding: "8px 12px",
+              background: colors.washiCard,
+              border: `2.5px solid ${colors.ink}`,
+              boxShadow: `4px 4px 0 ${colors.ink}`,
+              padding: "10px 14px",
               display: "flex",
               flexDirection: "column",
               gap: 6,
               fontFamily: "var(--font-display)",
-              fontSize: "0.75rem",
-              letterSpacing: "0.05em",
+              fontSize: "0.8rem",
+              fontWeight: 700,
+              letterSpacing: "0.04em",
             }}
           >
-            <div style={{ opacity: 0.6, fontSize: "0.65rem", marginBottom: 2 }}>MAP LAYERS</div>
+            <div style={{ opacity: 0.6, fontSize: "0.7rem", marginBottom: 2, borderBottom: `1px solid ${colors.ink}`, paddingBottom: 2 }}>
+              CARTOGRAPHIC LAYERS
+            </div>
             <label style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
               <input
                 type="checkbox"
                 checked={showZones}
                 onChange={(e) => setShowZones(e.target.checked)}
-                style={{ accentColor: colors.amareloNeon }}
+                style={{ accentColor: colors.ochre }}
               />
-              <span style={{ color: colors.amareloNeon }}>Risk Zones</span>
+              <span style={{ color: colors.ochre }}>Vulnerability Zones</span>
             </label>
             <label style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
               <input
                 type="checkbox"
                 checked={showIncidents}
                 onChange={(e) => setShowIncidents(e.target.checked)}
-                style={{ accentColor: colors.vermelho }}
+                style={{ accentColor: colors.vermilion }}
               />
-              <span style={{ color: colors.vermelho }}>Incidents</span>
+              <span style={{ color: colors.vermilion }}>Incident Clusters</span>
             </label>
             <label style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
               <input
                 type="checkbox"
                 checked={showShelters}
                 onChange={(e) => setShowShelters(e.target.checked)}
-                style={{ accentColor: colors.azulFosco }}
+                style={{ accentColor: colors.prussian }}
               />
-              <span style={{ color: colors.azulFosco }}>Shelters</span>
+              <span style={{ color: colors.prussian }}>Evacuation Shelters</span>
             </label>
             <label style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
               <input
                 type="checkbox"
                 checked={showTeams}
                 onChange={(e) => setShowTeams(e.target.checked)}
-                style={{ accentColor: colors.rosaNeon }}
+                style={{ accentColor: colors.indigo }}
               />
-              <span style={{ color: colors.rosaNeon }}>Response Teams</span>
+              <span style={{ color: colors.indigo }}>Field Response Teams</span>
             </label>
             <label style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
               <input
                 type="checkbox"
                 checked={showBlocked}
                 onChange={(e) => setShowBlocked(e.target.checked)}
-                style={{ accentColor: colors.vermelho }}
+                style={{ accentColor: colors.vermilion }}
               />
-              <span style={{ color: colors.vermelho }}>Blocked Roads</span>
+              <span style={{ color: colors.vermilion }}>Impassable Hazards</span>
             </label>
             <label style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
               <input
                 type="checkbox"
                 checked={showRoute}
                 onChange={(e) => setShowRoute(e.target.checked)}
-                style={{ accentColor: colors.verdeNeon }}
+                style={{ accentColor: colors.pine }}
               />
-              <span style={{ color: colors.verdeNeon }}>Safe Evacuation Route</span>
+              <span style={{ color: colors.pine }}>Safe Evacuation Corridor</span>
             </label>
           </div>
 
@@ -579,8 +582,8 @@ export default function CommandPage() {
         <aside
           style={{
             width: 420,
-            background: "var(--surface-overlay)",
-            borderLeft: "2px solid var(--surface-border)",
+            background: colors.washiCard,
+            borderLeft: `2.5px solid ${colors.ink}`,
             display: "flex",
             flexDirection: "column",
             overflow: "hidden",
@@ -591,8 +594,8 @@ export default function CommandPage() {
           <div
             style={{
               display: "flex",
-              borderBottom: "2px solid var(--surface-border)",
-              background: "var(--surface-card)",
+              borderBottom: `2.5px solid ${colors.ink}`,
+              background: colors.washiMuted,
             }}
           >
             <button
@@ -601,12 +604,13 @@ export default function CommandPage() {
                 flex: 1,
                 padding: "10px 8px",
                 fontFamily: "var(--font-display)",
-                fontSize: "0.8rem",
+                fontSize: "0.85rem",
+                fontWeight: 700,
                 letterSpacing: "0.06em",
-                background: activeTab === "queue" ? "var(--surface-overlay)" : "transparent",
-                color: activeTab === "queue" ? colors.amareloNeon : "var(--color-branco)",
+                background: activeTab === "queue" ? colors.washiCard : "transparent",
+                color: activeTab === "queue" ? colors.vermilion : colors.ink,
                 border: "none",
-                borderBottom: activeTab === "queue" ? `3px solid ${colors.amareloNeon}` : "none",
+                borderBottom: activeTab === "queue" ? `3px solid ${colors.vermilion}` : "none",
                 cursor: "pointer",
               }}
             >
@@ -619,12 +623,13 @@ export default function CommandPage() {
                 flex: 1,
                 padding: "10px 8px",
                 fontFamily: "var(--font-display)",
-                fontSize: "0.8rem",
+                fontSize: "0.85rem",
+                fontWeight: 700,
                 letterSpacing: "0.06em",
-                background: activeTab === "risk" ? "var(--surface-overlay)" : "transparent",
-                color: activeTab === "risk" ? colors.laranja : "var(--color-branco)",
+                background: activeTab === "risk" ? colors.washiCard : "transparent",
+                color: activeTab === "risk" ? colors.ochre : colors.ink,
                 border: "none",
-                borderBottom: activeTab === "risk" ? `3px solid ${colors.laranja}` : "none",
+                borderBottom: activeTab === "risk" ? `3px solid ${colors.ochre}` : "none",
                 cursor: "pointer",
               }}
             >
@@ -638,12 +643,13 @@ export default function CommandPage() {
                   flex: 1,
                   padding: "10px 8px",
                   fontFamily: "var(--font-display)",
-                  fontSize: "0.8rem",
+                  fontSize: "0.85rem",
+                  fontWeight: 700,
                   letterSpacing: "0.06em",
-                  background: activeTab === "evidence" ? "var(--surface-overlay)" : "transparent",
-                  color: activeTab === "evidence" ? colors.verdeNeon : "var(--color-branco)",
+                  background: activeTab === "evidence" ? colors.washiCard : "transparent",
+                  color: activeTab === "evidence" ? colors.pine : colors.ink,
                   border: "none",
-                  borderBottom: activeTab === "evidence" ? `3px solid ${colors.verdeNeon}` : "none",
+                  borderBottom: activeTab === "evidence" ? `3px solid ${colors.pine}` : "none",
                   cursor: "pointer",
                 }}
               >
@@ -653,7 +659,7 @@ export default function CommandPage() {
           </div>
 
           {/* Panel Content Body */}
-          <div style={{ flex: 1, overflowY: "auto", padding: "var(--space-2)" }}>
+          <div style={{ flex: 1, overflowY: "auto", padding: "var(--space-2)", background: colors.washi }}>
             {activeTab === "queue" && (
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -661,28 +667,29 @@ export default function CommandPage() {
                     style={{
                       fontFamily: "var(--font-display)",
                       fontSize: "0.8rem",
-                      color: "var(--color-branco)",
-                      opacity: 0.6,
+                      color: colors.ink,
+                      opacity: 0.7,
+                      fontWeight: 700,
                       letterSpacing: "0.05em",
                     }}
                   >
-                    PRIORITIZED TRIAGE QUEUE
+                    TRIAGE QUEUE
                   </span>
                   <button
                     onClick={handleAllocateTeams}
                     style={{
-                      background: colors.rosaNeon,
-                      color: "#000",
+                      background: colors.indigo,
+                      color: "#FAF4E8",
                       fontFamily: "var(--font-display)",
                       fontSize: "0.75rem",
                       fontWeight: 800,
-                      padding: "4px 8px",
-                      border: "1px solid #000",
-                      boxShadow: "2px 2px 0 #000",
+                      padding: "6px 10px",
+                      border: `2px solid ${colors.ink}`,
+                      boxShadow: `2px 2px 0 ${colors.ink}`,
                       cursor: "pointer",
                     }}
                   >
-                    ⚡ AUTO-ALLOCATE TEAMS
+                    DISPATCH OPTIMIZER
                   </button>
                 </div>
 
@@ -719,12 +726,13 @@ export default function CommandPage() {
                   <div
                     style={{
                       fontFamily: "var(--font-display)",
-                      fontSize: "0.75rem",
-                      opacity: 0.6,
+                      fontSize: "0.8rem",
+                      fontWeight: 700,
+                      opacity: 0.7,
                       marginBottom: 6,
                     }}
                   >
-                    ALL NEIGHBOURHOOD ZONES
+                    MUMBAI SECTOR INDEX
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                     {zones.map((z) => {
@@ -735,25 +743,31 @@ export default function CommandPage() {
                           key={z.properties.id}
                           onClick={() => setSelectedZone(z)}
                           style={{
-                            padding: "6px 10px",
-                            background: isSel ? "var(--surface-card)" : "rgba(255,255,255,0.02)",
-                            borderLeft: `4px solid ${
+                            padding: "8px 10px",
+                            background: isSel ? colors.washiMuted : colors.washiCard,
+                            borderLeft: `5px solid ${
                               r >= 0.7
-                                ? colors.vermelho
+                                ? colors.vermilion
                                 : r >= 0.45
-                                ? colors.laranja
+                                ? colors.ochre
                                 : r >= 0.25
-                                ? colors.amareloNeon
-                                : colors.verdeNeon
+                                ? colors.indigo
+                                : colors.pine
                             }`,
+                            borderTop: `1px solid ${colors.ink}`,
+                            borderRight: `1px solid ${colors.ink}`,
+                            borderBottom: `1px solid ${colors.ink}`,
                             cursor: "pointer",
                             display: "flex",
                             justifyContent: "space-between",
-                            fontSize: "0.8rem",
+                            fontSize: "0.85rem",
+                            fontFamily: "var(--font-display)",
+                            fontWeight: 700,
+                            boxShadow: isSel ? `2px 2px 0 ${colors.ink}` : "none",
                           }}
                         >
                           <span>{z.properties.name}</span>
-                          <span style={{ fontFamily: "var(--font-mono)", fontWeight: 700 }}>
+                          <span style={{ fontFamily: "var(--font-mono)", fontWeight: 800 }}>
                             {(r * 100).toFixed(0)}%
                           </span>
                         </div>

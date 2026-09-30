@@ -144,5 +144,11 @@ Append-only log. **Every time the IDE / coding agent changes anything** (code, s
 - How it works: OpenStreetMap raster tiles are adjusted directly in MapLibre with paint properties (`raster-brightness-max: 0.45`, `raster-contrast: 0.35`, `raster-saturation: -0.85`), rendering a crisp, dark operational map.
 - Why: CARTO recently introduced a mandatory watermark overlay ("API KEY REQUIRED") on unauthenticated tile requests. Switching to official OpenStreetMap tiles eliminates all watermarks and requires zero API keys.
 
+### D-023 · Visual style transition to Ukiyo-e Woodblock Revival · 2026-09-30
+- Status: active (supersedes D-012)
+- What changed: Complete platform redesign across `DESIGN.md`, `globals.css`, `design-tokens.ts`, `MapView.tsx`, all UI components (`ApprovalCard`, `EvidencePanel`, `RiskExplain`, `IncidentQueue`, `EventTimeline`), and all pages (`/command`, `/simulate`, `/incidents`, `/incidents/[id]`, `/resources`, `/responder`, `/report`).
+- How it works: Adopts the authentic Edo-period Ukiyo-e aesthetic: washi paper surfaces (`#F0E3CE`, `#FAF4E8`), decisive sumi ink outlines (`#0D0D15`), mineral pigment accents (vermilion `#E85D35`, Prussian blue `#003153`, Edo indigo `#2A4056`, ochre `#CC7722`, Japanese pine `#2D7F67`), tactile ink offset drop shadows (`3px 3px 0 #0D0D15`), and classic woodblock typography (`Cinzel` display and body, `JetBrains Mono` telemetry). Cartography uses aged washi-tinted raster tiles with mineral pigment risk layers.
+- Why: Implements the requested Ukiyo-e Woodblock Revival specification, delivering a memorable, high-contrast, uncluttered, and culturally distinctive UI with 0 emojis, 0 pure blacks (#000000), and crisp visual hierarchy.
+
 
 

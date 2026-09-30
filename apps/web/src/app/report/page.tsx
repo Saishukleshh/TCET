@@ -39,38 +39,56 @@ export default function ReportPage() {
     <div
       style={{
         minHeight: "100dvh",
-        background: "var(--surface-base)",
-        color: "var(--color-branco)",
+        background: colors.washi,
+        color: colors.ink,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        padding: "var(--space-3) var(--space-2)",
+        padding: "var(--space-4) var(--space-2)",
       }}
     >
       <div
         style={{
           width: "100%",
-          maxWidth: 480,
+          maxWidth: 520,
           display: "flex",
           flexDirection: "column",
           gap: "var(--space-3)",
         }}
       >
         {/* Top Header */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            borderBottom: `2px solid ${colors.ink}`,
+            paddingBottom: "var(--space-2)",
+          }}
+        >
           <div>
             <span
               style={{
-                fontFamily: "var(--font-accent)",
+                fontFamily: "var(--font-hero)",
                 fontSize: "1.75rem",
-                color: colors.amareloNeon,
+                fontWeight: 700,
+                color: colors.surface,
                 letterSpacing: "0.06em",
+                display: "block",
               }}
             >
               AEGISFLOW
             </span>
-            <div style={{ fontFamily: "var(--font-display)", fontSize: "0.8rem", color: colors.azulFosco }}>
-              CITIZEN FLOOD REPORTING PORTAL
+            <div
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "0.8rem",
+                color: colors.vermilion,
+                letterSpacing: "0.08em",
+                fontWeight: 700,
+              }}
+            >
+              CITIZEN FLOOD REPORTING DISPATCH
             </div>
           </div>
 
@@ -79,13 +97,17 @@ export default function ReportPage() {
             style={{
               fontFamily: "var(--font-display)",
               fontSize: "0.75rem",
-              color: colors.amareloNeon,
+              fontWeight: 700,
+              color: colors.ink,
               textDecoration: "none",
-              border: "1px solid var(--surface-border)",
-              padding: "4px 8px",
+              background: colors.washiCard,
+              border: `2px solid ${colors.ink}`,
+              boxShadow: `2px 2px 0 ${colors.ink}`,
+              padding: "6px 12px",
+              letterSpacing: "0.06em",
             }}
           >
-            COMMAND CENTER →
+            COMMAND MAP →
           </Link>
         </div>
 
@@ -93,81 +115,100 @@ export default function ReportPage() {
           /* Confirmation Result Card */
           <div
             style={{
-              background: "var(--surface-overlay)",
-              border: `4px solid ${colors.verdeNeon}`,
-              boxShadow: "5px 5px 0 #000",
+              background: colors.washiCard,
+              border: `3px solid ${colors.ink}`,
+              boxShadow: `5px 5px 0 ${colors.ink}`,
               padding: "var(--space-4)",
               display: "flex",
               flexDirection: "column",
               gap: "var(--space-3)",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
               <span
                 style={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: "50%",
-                  background: colors.verdeNeon,
-                  color: "#000",
+                  width: 36,
+                  height: 36,
+                  background: colors.pine,
+                  color: colors.washi,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   fontFamily: "var(--font-display)",
                   fontWeight: 900,
                   fontSize: "1.2rem",
+                  border: `2px solid ${colors.ink}`,
+                  boxShadow: `2px 2px 0 ${colors.ink}`,
                 }}
               >
-                ✓
+                OK
               </span>
               <div>
-                <div style={{ fontFamily: "var(--font-display)", fontSize: "1.2rem", color: colors.verdeNeon }}>
-                  REPORT SUBMITTED & GEOTAGGED
+                <div
+                  style={{
+                    fontFamily: "var(--font-hero)",
+                    fontSize: "1.15rem",
+                    fontWeight: 700,
+                    color: colors.pine,
+                  }}
+                >
+                  DISPATCH GEOTAGGED & VERIFIED
                 </div>
-                <div style={{ fontSize: "0.75rem", opacity: 0.6, fontFamily: "var(--font-mono)" }}>
-                  ID: #{submittedResult.id?.slice(0, 8)} · CLUSTER #{submittedResult.cluster_id?.slice(0, 8)}
+                <div style={{ fontSize: "0.75rem", fontFamily: "var(--font-mono)", color: colors.ink, opacity: 0.7 }}>
+                  REPORT ID: #{submittedResult.id?.slice(0, 8)} · CLUSTER #{submittedResult.cluster_id?.slice(0, 8)}
                 </div>
               </div>
             </div>
 
-            <p style={{ fontSize: "0.9rem", lineHeight: 1.45, opacity: 0.9 }}>
-              Thank you for keeping your community safe. Your report has been aggregated with nearby citizen signals
-              and submitted for automated AI verification and emergency dispatch.
+            <p style={{ fontSize: "0.9rem", fontFamily: "var(--font-body)", lineHeight: 1.5, margin: 0 }}>
+              Your report has been logged onto the emergency grid, aggregated with nearby citizen telemetry, and
+              forwarded to automated AI verification and municipal rescue dispatch.
             </p>
 
             {/* Nearest Safe Shelter Info */}
             <div
               style={{
-                background: "var(--surface-card)",
-                borderLeft: `4px solid ${colors.azulFosco}`,
+                background: colors.washi,
+                border: `2px solid ${colors.ink}`,
+                borderLeft: `6px solid ${colors.indigo}`,
                 padding: "12px",
                 display: "flex",
                 flexDirection: "column",
                 gap: 4,
               }}
             >
-              <div style={{ fontFamily: "var(--font-display)", fontSize: "0.8rem", color: colors.azulFosco }}>
+              <div
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "0.75rem",
+                  fontWeight: 700,
+                  color: colors.indigo,
+                  letterSpacing: "0.06em",
+                }}
+              >
                 NEAREST DESIGNATED SAFE SHELTER
               </div>
-              <div style={{ fontFamily: "var(--font-display)", fontSize: "1rem" }}>
+              <div style={{ fontFamily: "var(--font-hero)", fontSize: "1.05rem", fontWeight: 700, color: colors.ink }}>
                 Kurla Municipal School (Shelter-002)
               </div>
-              <div style={{ fontSize: "0.75rem", opacity: 0.6, fontFamily: "var(--font-mono)" }}>
-                Distance: ~400 meters · Status: OPEN · Verified Safe Walking Route
+              <div style={{ fontSize: "0.75rem", opacity: 0.75, fontFamily: "var(--font-mono)" }}>
+                Distance: ~400 meters · Status: OPEN · Safe Ingress Route Active
               </div>
             </div>
 
-            <div style={{ display: "flex", gap: 10 }}>
+            <div style={{ display: "flex", gap: 12 }}>
               <button
                 onClick={() => setSubmittedResult(null)}
                 style={{
                   flex: 1,
-                  padding: "10px",
-                  background: "var(--surface-card)",
-                  color: "var(--color-branco)",
+                  padding: "12px",
+                  background: colors.washiCard,
+                  color: colors.ink,
                   fontFamily: "var(--font-display)",
                   fontSize: "0.85rem",
-                  border: "1px solid var(--surface-border)",
+                  fontWeight: 700,
+                  border: `2px solid ${colors.ink}`,
+                  boxShadow: `2px 2px 0 ${colors.ink}`,
                   cursor: "pointer",
                 }}
               >
@@ -178,16 +219,17 @@ export default function ReportPage() {
                 href="/command"
                 style={{
                   flex: 1,
-                  padding: "10px",
-                  background: colors.amareloNeon,
-                  color: "#000",
+                  padding: "12px",
+                  background: colors.vermilion,
+                  color: colors.washi,
                   fontFamily: "var(--font-display)",
                   fontSize: "0.85rem",
                   textAlign: "center",
                   textDecoration: "none",
-                  fontWeight: 800,
-                  border: "2px solid #000",
-                  boxShadow: "3px 3px 0 #000",
+                  fontWeight: 700,
+                  border: `2px solid ${colors.ink}`,
+                  boxShadow: `3px 3px 0 ${colors.ink}`,
+                  letterSpacing: "0.06em",
                 }}
               >
                 VIEW LIVE MAP →
@@ -199,9 +241,9 @@ export default function ReportPage() {
           <form
             onSubmit={handleSubmit}
             style={{
-              background: "var(--surface-overlay)",
-              border: "3px solid #000",
-              boxShadow: "5px 5px 0 #000",
+              background: colors.washiCard,
+              border: `3px solid ${colors.ink}`,
+              boxShadow: `5px 5px 0 ${colors.ink}`,
               padding: "var(--space-3)",
               display: "flex",
               flexDirection: "column",
@@ -211,20 +253,31 @@ export default function ReportPage() {
             {/* GPS Location Pill */}
             <div
               style={{
-                background: "var(--surface-card)",
-                padding: "8px 12px",
-                border: "1px solid var(--surface-border)",
+                background: colors.washi,
+                padding: "10px 14px",
+                border: `2px solid ${colors.ink}`,
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
                 fontSize: "0.8rem",
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <span style={{ color: colors.verdeNeon }}>📍</span>
-                <span style={{ opacity: 0.8 }}>Current Location:</span>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    background: colors.surface,
+                    color: colors.washi,
+                    padding: "2px 6px",
+                    fontSize: "0.7rem",
+                    fontWeight: 700,
+                  }}
+                >
+                  GPS
+                </span>
+                <span style={{ fontFamily: "var(--font-display)", fontWeight: 700 }}>Telemetry Fix:</span>
               </div>
-              <span style={{ fontFamily: "var(--font-mono)", color: colors.amareloNeon }}>
+              <span style={{ fontFamily: "var(--font-mono)", color: colors.surface, fontWeight: 700 }}>
                 {lat.toFixed(4)}°N, {lng.toFixed(4)}°E (Kurla West)
               </span>
             </div>
@@ -236,39 +289,42 @@ export default function ReportPage() {
                   display: "block",
                   fontFamily: "var(--font-display)",
                   fontSize: "0.85rem",
-                  letterSpacing: "0.05em",
+                  fontWeight: 700,
+                  letterSpacing: "0.06em",
                   marginBottom: 8,
                 }}
               >
-                ESTIMATED WATER DEPTH
+                ESTIMATED WATER ACCUMULATION DEPTH
               </label>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
                 {[
-                  { key: "ankle", label: "ANKLE", sub: "~15 cm", col: colors.amareloNeon },
-                  { key: "knee", label: "KNEE", sub: "~45 cm", col: colors.laranja },
-                  { key: "waist+", label: "WAIST+", sub: "1m+ Danger", col: colors.vermelho },
+                  { key: "ankle", label: "ANKLE", sub: "~15 cm", col: colors.ochre, textCol: colors.ink },
+                  { key: "knee", label: "KNEE", sub: "~45 cm", col: colors.vermilion, textCol: colors.washi },
+                  { key: "waist+", label: "WAIST+", sub: "1m+ Danger", col: colors.surface, textCol: colors.washi },
                 ].map((item) => (
                   <button
                     key={item.key}
                     type="button"
                     onClick={() => setDepth(item.key as any)}
                     style={{
-                      padding: "10px 4px",
-                      background: depth === item.key ? item.col : "var(--surface-card)",
-                      color: depth === item.key ? "#000" : "var(--color-branco)",
-                      border: depth === item.key ? "2px solid #000" : "1px solid var(--surface-border)",
-                      boxShadow: depth === item.key ? "2px 2px 0 #000" : "none",
+                      padding: "12px 6px",
+                      background: depth === item.key ? item.col : colors.washi,
+                      color: depth === item.key ? item.textCol : colors.ink,
+                      border: `2px solid ${colors.ink}`,
+                      boxShadow: depth === item.key ? `3px 3px 0 ${colors.ink}` : `1px 1px 0 ${colors.ink}`,
                       cursor: "pointer",
                       display: "flex",
                       flexDirection: "column",
                       alignItems: "center",
-                      gap: 2,
+                      gap: 3,
                     }}
                   >
-                    <span style={{ fontFamily: "var(--font-display)", fontSize: "0.95rem", fontWeight: 800 }}>
+                    <span style={{ fontFamily: "var(--font-display)", fontSize: "0.95rem", fontWeight: 700 }}>
                       {item.label}
                     </span>
-                    <span style={{ fontSize: "0.65rem", opacity: 0.8 }}>{item.sub}</span>
+                    <span style={{ fontSize: "0.7rem", fontFamily: "var(--font-mono)", opacity: 0.85 }}>
+                      {item.sub}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -281,11 +337,12 @@ export default function ReportPage() {
                   display: "block",
                   fontFamily: "var(--font-display)",
                   fontSize: "0.85rem",
-                  letterSpacing: "0.05em",
+                  fontWeight: 700,
+                  letterSpacing: "0.06em",
                   marginBottom: 6,
                 }}
               >
-                WHAT ARE YOU OBSERVING?
+                SITUATION DISPATCH OBSERVATION
               </label>
               <textarea
                 value={text}
@@ -295,11 +352,12 @@ export default function ReportPage() {
                 placeholder="Describe current road conditions, trapped people, or overflowing drains..."
                 style={{
                   width: "100%",
-                  background: "var(--surface-card)",
-                  border: "1px solid var(--surface-border)",
-                  color: "#fff",
-                  padding: "8px 10px",
+                  background: colors.washi,
+                  border: `2px solid ${colors.ink}`,
+                  color: colors.ink,
+                  padding: "10px 12px",
                   fontSize: "0.85rem",
+                  fontFamily: "var(--font-body)",
                   outline: "none",
                 }}
               />
@@ -308,23 +366,27 @@ export default function ReportPage() {
             {/* Photo Attachment Toggle */}
             <div
               style={{
-                background: "var(--surface-card)",
-                padding: "10px 12px",
-                border: "1px solid var(--surface-border)",
+                background: colors.washi,
+                padding: "12px 14px",
+                border: `2px solid ${colors.ink}`,
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
               }}
             >
               <div>
-                <div style={{ fontFamily: "var(--font-display)", fontSize: "0.85rem" }}>ATTACH EVIDENCE PHOTO</div>
-                <div style={{ fontSize: "0.7rem", opacity: 0.6 }}>Enables automated Vision AI depth verification</div>
+                <div style={{ fontFamily: "var(--font-display)", fontSize: "0.85rem", fontWeight: 700 }}>
+                  ATTACH CITIZEN EVIDENCE PHOTO
+                </div>
+                <div style={{ fontSize: "0.75rem", opacity: 0.7, fontFamily: "var(--font-body)" }}>
+                  Feeds Vision AI depth classification & water level verification
+                </div>
               </div>
               <input
                 type="checkbox"
                 checked={photoSelected}
                 onChange={(e) => setPhotoSelected(e.target.checked)}
-                style={{ width: 20, height: 20, accentColor: colors.rosaNeon, cursor: "pointer" }}
+                style={{ width: 22, height: 22, accentColor: colors.vermilion, cursor: "pointer" }}
               />
             </div>
 
@@ -333,20 +395,20 @@ export default function ReportPage() {
               type="submit"
               disabled={isSubmitting}
               style={{
-                background: colors.amareloNeon,
-                color: "#000",
+                background: colors.vermilion,
+                color: colors.washi,
                 fontFamily: "var(--font-display)",
-                fontSize: "1.1rem",
-                fontWeight: 900,
+                fontSize: "1.05rem",
+                fontWeight: 700,
                 letterSpacing: "0.08em",
-                padding: "12px",
-                border: "2px solid #000",
-                boxShadow: "4px 4px 0 #000",
+                padding: "14px",
+                border: `2px solid ${colors.ink}`,
+                boxShadow: `4px 4px 0 ${colors.ink}`,
                 cursor: isSubmitting ? "not-allowed" : "pointer",
                 marginTop: 6,
               }}
             >
-              {isSubmitting ? "TRANSMITTING TO DISPATCH..." : "SUBMIT REPORT"}
+              {isSubmitting ? "TRANSMITTING TO DISPATCH..." : "SUBMIT REPORT TO GRID"}
             </button>
           </form>
         )}

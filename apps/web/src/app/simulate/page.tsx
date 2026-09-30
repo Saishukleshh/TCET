@@ -43,7 +43,6 @@ export default function SimulatePage() {
     setLog((prev) => [`[${time}] ${msg}`, ...prev.slice(0, 30)]);
   };
 
-  // Actions
   const handleSetRain = async (mm: number) => {
     setRainMm(mm);
     addLog(`Setting rainfall intensity to ${mm} mm/h...`);
@@ -60,7 +59,7 @@ export default function SimulatePage() {
     addLog(`Injecting ${count} citizen reports near Kurla West...`);
     try {
       const res = await simulateReports(count, "zone-001");
-      addLog(`✓ Injected ${res.reports_injected} reports. Deduplicated into ${res.incidents_created_or_updated} incident.`);
+      addLog(`✓ Injected ${res.reports_injected} reports. Clustered into ${res.incidents_created_or_updated} incident.`);
       await refreshState();
     } catch (e) {
       addLog(`✗ Error injecting reports: ${e}`);
@@ -68,10 +67,10 @@ export default function SimulatePage() {
   };
 
   const handleBlockRoad = async () => {
-    addLog(`Triggering road hazard block on LBS Marg...`);
+    addLog(`Deploying road safety barrier on LBS Marg...`);
     try {
       const res = await simulateBlockRoad("flooding");
-      addLog(`✓ Road #${res.road_id.slice(0, 8)} blocked. Safe evacuation route recalculated avoiding flood polygons.`);
+      addLog(`✓ Road #${res.road_id.slice(0, 8)} blocked. Safe evacuation corridor recalculated avoiding hazard.`);
       await refreshState();
     } catch (e) {
       addLog(`✗ Error blocking road: ${e}`);
@@ -79,7 +78,7 @@ export default function SimulatePage() {
   };
 
   const handleAllocate = async () => {
-    addLog(`Triggering Hungarian algorithm resource allocation...`);
+    addLog(`Solving Hungarian optimization for team assignments...`);
     try {
       const incs = await fetchIncidents();
       const ids = incs.map((i: any) => i.id);
@@ -88,7 +87,7 @@ export default function SimulatePage() {
         return;
       }
       const res = await allocateResources(ids);
-      addLog(`✓ Resource allocation completed: ${res.assignments?.length ?? 0} team assignments solved.`);
+      addLog(`✓ Resource allocation completed: ${res.assignments?.length ?? 0} unit assignments solved.`);
       await refreshState();
     } catch (e) {
       addLog(`✗ Error allocating resources: ${e}`);
@@ -96,7 +95,7 @@ export default function SimulatePage() {
   };
 
   const handleApproveAlerts = async () => {
-    addLog(`Checking for pending command alerts...`);
+    addLog(`Checking for pending emergency alerts...`);
     try {
       const alerts = await fetchAlerts();
       const pending = alerts.filter((a: any) => a.status === "pending");
@@ -133,10 +132,10 @@ export default function SimulatePage() {
   const runFullScenario = async () => {
     setIsRunningScenario(true);
     setScenarioStep(1);
-    addLog("=== STARTING 10:42 -> 10:52 DEMO SCENARIO ===");
+    addLog("=== INITIATING 10:42 -> 10:52 DEMO CHRONICLE ===");
 
     // Step 1: 10:42 Rainfall anomaly
-    addLog("10:42 — Rainfall anomaly detected (Open-Meteo ingest + sim 55 mm/h)");
+    addLog("10:42 — Precipitation anomaly detected (Open-Meteo ingest + 55 mm/h)");
     await simulateRain(55);
     setRainMm(55);
     await refreshState();
@@ -144,13 +143,13 @@ export default function SimulatePage() {
     // Step 2: 10:45 Risk score calculation
     await new Promise((r) => setTimeout(r, 2000));
     setScenarioStep(2);
-    addLog("10:45 — Flood risk calculated: Kurla West exceeds 70% (CRITICAL, factor breakdown updated)");
+    addLog("10:45 — Vulnerability matrix calculated: Kurla West exceeds 70% (CRITICAL, factor breakdown updated)");
     await refreshState();
 
     // Step 3: 10:47 Inject 23 reports
     await new Promise((r) => setTimeout(r, 2500));
     setScenarioStep(3);
-    addLog("10:47 — 23 citizen reports received across Kurla West corridor");
+    addLog("10:47 — 23 citizen distress signals ingested across Kurla corridor");
     await simulateReports(23, "zone-001");
     await refreshState();
 
@@ -163,14 +162,14 @@ export default function SimulatePage() {
     // Step 5: 10:49 Road marked unsafe
     await new Promise((r) => setTimeout(r, 2500));
     setScenarioStep(5);
-    addLog("10:49 — Road safety barrier deployed: LBS Marg impassable");
+    addLog("10:49 — Hazard barrier deployed: LBS Marg arterial impassable");
     await simulateBlockRoad("flooding");
     await refreshState();
 
     // Step 6: 10:50 Route recalculated
     await new Promise((r) => setTimeout(r, 2000));
     setScenarioStep(6);
-    addLog("10:50 — Evacuation route dynamically recalculated avoiding blocked segment and waterlogged polygons");
+    addLog("10:50 — Evacuation corridor dynamically recalculated avoiding hazard segment and flood polygons");
     await refreshState();
 
     // Step 7: 10:51 Emergency resources assigned
@@ -184,7 +183,7 @@ export default function SimulatePage() {
     // Step 8: 10:52 Command alert approved and sent
     await new Promise((r) => setTimeout(r, 2500));
     setScenarioStep(8);
-    addLog("10:52 — Command authorization approved: Critical evacuation alert broadcasted to population");
+    addLog("10:52 — Command authorization signed: Critical evacuation notice transmitted to citizens");
     const alerts = await fetchAlerts();
     const pending = alerts.filter((a: any) => a.status === "pending");
     for (const p of pending) {
@@ -192,7 +191,7 @@ export default function SimulatePage() {
     }
     await refreshState();
 
-    addLog("=== DEMO SCENARIO COMPLETE: FULL LOOP VALIDATED ===");
+    addLog("=== DEMO CHRONICLE COMPLETE: FULL OPERATIONAL LOOP VALIDATED ===");
     setIsRunningScenario(false);
   };
 
@@ -200,8 +199,8 @@ export default function SimulatePage() {
     <div
       style={{
         minHeight: "100dvh",
-        background: "var(--surface-base)",
-        color: "var(--color-branco)",
+        background: colors.washi,
+        color: colors.ink,
         padding: "var(--space-4)",
       }}
     >
@@ -212,7 +211,7 @@ export default function SimulatePage() {
           justifyContent: "space-between",
           alignItems: "center",
           marginBottom: "var(--space-4)",
-          borderBottom: "2px solid var(--surface-border)",
+          borderBottom: `2.5px solid ${colors.ink}`,
           paddingBottom: "var(--space-2)",
         }}
       >
@@ -220,21 +219,30 @@ export default function SimulatePage() {
           <div style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
             <h1
               style={{
-                fontFamily: "var(--font-accent)",
+                fontFamily: "var(--font-display)",
                 fontSize: "var(--text-h1)",
-                color: colors.amareloNeon,
+                color: colors.ink,
                 letterSpacing: "0.06em",
                 margin: 0,
               }}
             >
               SIMULATOR & DEMO CONTROLLER
             </h1>
-            <span style={{ fontFamily: "var(--font-mono)", color: colors.verdeNeon, fontSize: "0.85rem" }}>
-              DEMO REHEARSAL & TELEMETRY INJECTOR
+            <span
+              style={{
+                border: `2px solid ${colors.vermilion}`,
+                color: colors.vermilion,
+                fontFamily: "var(--font-display)",
+                fontSize: "0.75rem",
+                fontWeight: 800,
+                padding: "2px 8px",
+              }}
+            >
+              REHEARSAL CHAMBER
             </span>
           </div>
-          <p style={{ margin: "4px 0 0", opacity: 0.6, fontSize: "0.85rem" }}>
-            Control rainfall intensity, inject duplicate crowdsourced reports, deploy road blocks, and execute the automated 10:42 → 10:52 scenario.
+          <p style={{ margin: "4px 0 0", opacity: 0.7, fontSize: "0.85rem", fontFamily: "var(--font-body)" }}>
+            Execute the complete automated 10:42 → 10:52 scenario, inject duplicate crowdsourced reports, deploy road hazard blocks, and test dynamic re-routing.
           </p>
         </div>
 
@@ -243,29 +251,32 @@ export default function SimulatePage() {
             onClick={handleReset}
             style={{
               fontFamily: "var(--font-display)",
+              fontWeight: 700,
               padding: "8px 16px",
               background: "transparent",
-              color: colors.vermelho,
-              border: `2px solid ${colors.vermelho}`,
+              color: colors.vermilion,
+              border: `2px solid ${colors.vermilion}`,
+              boxShadow: `2px 2px 0 ${colors.vermilion}`,
               cursor: "pointer",
             }}
           >
-            ↺ RESET STATE
+            RESET STATE
           </button>
 
           <Link
             href="/command"
             style={{
               fontFamily: "var(--font-display)",
+              fontWeight: 700,
               padding: "8px 16px",
-              background: colors.amareloNeon,
-              color: "#000",
+              background: colors.vermilion,
+              color: "#FAF4E8",
               textDecoration: "none",
-              border: "2px solid #000",
-              boxShadow: "3px 3px 0 #000",
+              border: `2px solid ${colors.ink}`,
+              boxShadow: `3px 3px 0 ${colors.ink}`,
             }}
           >
-            ← COMMAND CENTER
+            COMMAND CENTER →
           </Link>
         </div>
       </div>
@@ -278,44 +289,45 @@ export default function SimulatePage() {
             gridTemplateColumns: "repeat(6, 1fr)",
             gap: 12,
             marginBottom: "var(--space-4)",
-            background: "var(--surface-overlay)",
+            background: colors.washiCard,
             padding: "12px 16px",
-            border: "1px solid var(--surface-border)",
+            border: `2px solid ${colors.ink}`,
+            boxShadow: `3px 3px 0 ${colors.ink}`,
           }}
         >
           <div>
-            <div style={{ fontSize: "0.7rem", opacity: 0.6 }}>CURRENT RAINFALL</div>
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: colors.azulFosco, fontWeight: 700 }}>
+            <div style={{ fontSize: "0.7rem", opacity: 0.6, fontFamily: "var(--font-display)", fontWeight: 700 }}>PRECIPITATION</div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: colors.prussian, fontWeight: 800 }}>
               {rainMm.toFixed(1)} mm/h
             </div>
           </div>
           <div>
-            <div style={{ fontSize: "0.7rem", opacity: 0.6 }}>ACTIVE INCIDENTS</div>
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: colors.vermelho, fontWeight: 700 }}>
+            <div style={{ fontSize: "0.7rem", opacity: 0.6, fontFamily: "var(--font-display)", fontWeight: 700 }}>ACTIVE INCIDENTS</div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: colors.vermilion, fontWeight: 800 }}>
               {state.incidents}
             </div>
           </div>
           <div>
-            <div style={{ fontSize: "0.7rem", opacity: 0.6 }}>REPORTS INGESTED</div>
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: colors.amareloNeon, fontWeight: 700 }}>
+            <div style={{ fontSize: "0.7rem", opacity: 0.6, fontFamily: "var(--font-display)", fontWeight: 700 }}>REPORTS INGESTED</div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: colors.ochre, fontWeight: 800 }}>
               {state.reports}
             </div>
           </div>
           <div>
-            <div style={{ fontSize: "0.7rem", opacity: 0.6 }}>ROAD HAZARDS</div>
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: colors.laranja, fontWeight: 700 }}>
+            <div style={{ fontSize: "0.7rem", opacity: 0.6, fontFamily: "var(--font-display)", fontWeight: 700 }}>ROAD HAZARDS</div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: colors.vermilion, fontWeight: 800 }}>
               {state.blocked_roads}
             </div>
           </div>
           <div>
-            <div style={{ fontSize: "0.7rem", opacity: 0.6 }}>ALERTS ISSUED</div>
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: colors.verdeNeon, fontWeight: 700 }}>
+            <div style={{ fontSize: "0.7rem", opacity: 0.6, fontFamily: "var(--font-display)", fontWeight: 700 }}>SEALS ISSUED</div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: colors.pine, fontWeight: 800 }}>
               {state.alerts}
             </div>
           </div>
           <div>
-            <div style={{ fontSize: "0.7rem", opacity: 0.6 }}>AVAILABLE TEAMS</div>
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: colors.rosaNeon, fontWeight: 700 }}>
+            <div style={{ fontSize: "0.7rem", opacity: 0.6, fontFamily: "var(--font-display)", fontWeight: 700 }}>RESPONSE UNITS</div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: colors.indigo, fontWeight: 800 }}>
               {state.teams?.filter((t: any) => t.status === "available").length ?? 0}/{state.teams?.length ?? 5}
             </div>
           </div>
@@ -329,9 +341,9 @@ export default function SimulatePage() {
           {/* Automated Scenario Section */}
           <div
             style={{
-              background: "var(--surface-overlay)",
-              border: `3px solid ${colors.amareloNeon}`,
-              boxShadow: "5px 5px 0 #000",
+              background: colors.washiCard,
+              border: `3px solid ${colors.ink}`,
+              boxShadow: `4px 4px 0 ${colors.ink}`,
               padding: "var(--space-3)",
             }}
           >
@@ -339,28 +351,30 @@ export default function SimulatePage() {
               <span
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontSize: "1.2rem",
-                  color: colors.amareloNeon,
-                  letterSpacing: "0.06em",
+                  fontSize: "1.15rem",
+                  fontWeight: 800,
+                  color: colors.ink,
+                  letterSpacing: "0.05em",
                 }}
               >
-                1-CLICK AUTOMATED DEMO SCENARIO (10:42 → 10:52)
+                AUTOMATED DEMO SCENARIO (10:42 → 10:52)
               </span>
               <span
                 style={{
                   fontFamily: "var(--font-mono)",
                   fontSize: "0.75rem",
-                  color: isRunningScenario ? colors.verdeNeon : "inherit",
+                  fontWeight: 700,
+                  color: isRunningScenario ? colors.vermilion : colors.ink,
                 }}
               >
-                {isRunningScenario ? `EXECUTING STEP ${scenarioStep}/8...` : "READY TO RUN"}
+                {isRunningScenario ? `EXECUTING STEP ${scenarioStep}/8...` : "READY"}
               </span>
             </div>
 
-            <p style={{ fontSize: "0.85rem", opacity: 0.8, lineHeight: 1.45, margin: "0 0 16px 0" }}>
-              Runs the full judge demonstration loop sequentially: Anomaly detection → Zone risk matrix → 23 Reports
-              clustered into 1 incident → Road hazard barrier → Evacuation route recalculation → Hungarian team dispatch →
-              Command alert broadcast.
+            <p style={{ fontSize: "0.85rem", opacity: 0.8, lineHeight: 1.5, margin: "0 0 16px 0", fontFamily: "var(--font-body)" }}>
+              Executes the full judge demonstration loop sequentially: Anomaly detection → Vulnerability matrix update → 23 Reports
+              consolidated into 1 incident → Road hazard deployment → Evacuation corridor re-routing → Hungarian dispatch →
+              Command seal broadcast.
             </p>
 
             <button
@@ -368,43 +382,44 @@ export default function SimulatePage() {
               disabled={isRunningScenario}
               style={{
                 width: "100%",
-                background: isRunningScenario ? "var(--surface-card)" : colors.amareloNeon,
-                color: isRunningScenario ? "var(--color-branco)" : "#000",
+                background: isRunningScenario ? colors.washiMuted : colors.vermilion,
+                color: isRunningScenario ? colors.ink : "#FAF4E8",
                 fontFamily: "var(--font-display)",
-                fontSize: "1.1rem",
-                fontWeight: 900,
-                letterSpacing: "0.08em",
+                fontSize: "1rem",
+                fontWeight: 800,
+                letterSpacing: "0.06em",
                 padding: "12px",
-                border: "2px solid #000",
-                boxShadow: isRunningScenario ? "none" : "4px 4px 0 #000",
+                border: `2px solid ${colors.ink}`,
+                boxShadow: isRunningScenario ? "none" : `3px 3px 0 ${colors.ink}`,
                 cursor: isRunningScenario ? "wait" : "pointer",
               }}
             >
-              {isRunningScenario ? `EXECUTING DEMO SCENARIO STEP ${scenarioStep}/8...` : "▶ EXECUTE FULL DEMO SCENARIO"}
+              {isRunningScenario ? `EXECUTING STEP ${scenarioStep}/8...` : "EXECUTE FULL DEMO SCENARIO"}
             </button>
           </div>
 
           {/* Manual Trigger Controls */}
           <div
             style={{
-              background: "var(--surface-overlay)",
-              border: "2px solid var(--surface-border)",
+              background: colors.washiCard,
+              border: `2px solid ${colors.ink}`,
+              boxShadow: `3px 3px 0 ${colors.ink}`,
               padding: "var(--space-3)",
               display: "flex",
               flexDirection: "column",
               gap: 16,
             }}
           >
-            <div style={{ fontFamily: "var(--font-display)", fontSize: "1rem", letterSpacing: "0.06em" }}>
-              MANUAL COMPONENT TRIGGERS
+            <div style={{ fontFamily: "var(--font-display)", fontSize: "1rem", fontWeight: 700, letterSpacing: "0.05em" }}>
+              MANUAL HAZARD & DISPATCH CONTROLS
             </div>
 
             {/* Rainfall Slider & Presets */}
             <div>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                <span style={{ fontSize: "0.8rem", opacity: 0.8 }}>Rainfall Intensity: {rainMm} mm/h</span>
-                <span style={{ fontSize: "0.75rem", color: colors.azulFosco, fontFamily: "var(--font-mono)" }}>
-                  Dynamic Risk Calculation
+                <span style={{ fontSize: "0.8rem", fontWeight: 700 }}>Rainfall Intensity: {rainMm} mm/h</span>
+                <span style={{ fontSize: "0.75rem", color: colors.prussian, fontFamily: "var(--font-mono)" }}>
+                  Continuous Risk Calculation
                 </span>
               </div>
               <input
@@ -414,15 +429,15 @@ export default function SimulatePage() {
                 step={5}
                 value={rainMm}
                 onChange={(e) => handleSetRain(Number(e.target.value))}
-                style={{ width: "100%", accentColor: colors.azulFosco, cursor: "pointer" }}
+                style={{ width: "100%", accentColor: colors.prussian, cursor: "pointer" }}
               />
               <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
                 {[
-                  { label: "Clear (0 mm)", val: 0 },
-                  { label: "Drizzle (10 mm)", val: 10 },
-                  { label: "Watch (30 mm)", val: 30 },
-                  { label: "Warning (55 mm)", val: 55 },
-                  { label: "Cloudburst (85 mm)", val: 85 },
+                  { label: "Clear (0)", val: 0 },
+                  { label: "Drizzle (10)", val: 10 },
+                  { label: "Watch (30)", val: 30 },
+                  { label: "Warning (55)", val: 55 },
+                  { label: "Cloudburst (85)", val: 85 },
                 ].map((p) => (
                   <button
                     key={p.val}
@@ -430,11 +445,12 @@ export default function SimulatePage() {
                     style={{
                       flex: 1,
                       padding: "6px",
-                      background: "var(--surface-card)",
-                      color: "var(--color-branco)",
+                      background: colors.washiMuted,
+                      color: colors.ink,
                       fontFamily: "var(--font-mono)",
                       fontSize: "0.7rem",
-                      border: "1px solid var(--surface-border)",
+                      fontWeight: 700,
+                      border: `1.5px solid ${colors.ink}`,
                       cursor: "pointer",
                     }}
                   >
@@ -450,64 +466,72 @@ export default function SimulatePage() {
                 onClick={() => handleInjectReports(23)}
                 style={{
                   padding: "10px",
-                  background: "var(--surface-card)",
-                  color: colors.amareloNeon,
+                  background: colors.washiMuted,
+                  color: colors.ink,
                   fontFamily: "var(--font-display)",
                   fontSize: "0.85rem",
-                  letterSpacing: "0.05em",
-                  border: `2px solid ${colors.amareloNeon}`,
+                  fontWeight: 700,
+                  letterSpacing: "0.04em",
+                  border: `2px solid ${colors.ink}`,
+                  boxShadow: `2px 2px 0 ${colors.ink}`,
                   cursor: "pointer",
                 }}
               >
-                + INJECT 23 CITIZEN REPORTS
+                + INJECT 23 REPORTS
               </button>
 
               <button
                 onClick={handleBlockRoad}
                 style={{
                   padding: "10px",
-                  background: "var(--surface-card)",
-                  color: colors.vermelho,
+                  background: colors.washiMuted,
+                  color: colors.vermilion,
                   fontFamily: "var(--font-display)",
                   fontSize: "0.85rem",
-                  letterSpacing: "0.05em",
-                  border: `2px solid ${colors.vermelho}`,
+                  fontWeight: 700,
+                  letterSpacing: "0.04em",
+                  border: `2px solid ${colors.ink}`,
+                  boxShadow: `2px 2px 0 ${colors.ink}`,
                   cursor: "pointer",
                 }}
               >
-                ⚠ DEPLOY ROAD HAZARD BLOCK
+                DEPLOY ROAD BLOCK
               </button>
 
               <button
                 onClick={handleAllocate}
                 style={{
                   padding: "10px",
-                  background: "var(--surface-card)",
-                  color: colors.rosaNeon,
+                  background: colors.washiMuted,
+                  color: colors.indigo,
                   fontFamily: "var(--font-display)",
                   fontSize: "0.85rem",
-                  letterSpacing: "0.05em",
-                  border: `2px solid ${colors.rosaNeon}`,
+                  fontWeight: 700,
+                  letterSpacing: "0.04em",
+                  border: `2px solid ${colors.ink}`,
+                  boxShadow: `2px 2px 0 ${colors.ink}`,
                   cursor: "pointer",
                 }}
               >
-                ⚡ HUNGARIAN ALLOCATION
+                HUNGARIAN DISPATCH
               </button>
 
               <button
                 onClick={handleApproveAlerts}
                 style={{
                   padding: "10px",
-                  background: "var(--surface-card)",
-                  color: colors.verdeNeon,
+                  background: colors.washiMuted,
+                  color: colors.pine,
                   fontFamily: "var(--font-display)",
                   fontSize: "0.85rem",
-                  letterSpacing: "0.05em",
-                  border: `2px solid ${colors.verdeNeon}`,
+                  fontWeight: 700,
+                  letterSpacing: "0.04em",
+                  border: `2px solid ${colors.ink}`,
+                  boxShadow: `2px 2px 0 ${colors.ink}`,
                   cursor: "pointer",
                 }}
               >
-                ✓ APPROVE PENDING ALERTS
+                APPROVE PENDING SEALS
               </button>
             </div>
           </div>
@@ -516,8 +540,9 @@ export default function SimulatePage() {
         {/* Right: Real-time Event Console Log */}
         <div
           style={{
-            background: "var(--surface-overlay)",
-            border: "2px solid var(--surface-border)",
+            background: colors.washiCard,
+            border: `2.5px solid ${colors.ink}`,
+            boxShadow: `4px 4px 0 ${colors.ink}`,
             display: "flex",
             flexDirection: "column",
             height: "100%",
@@ -527,17 +552,18 @@ export default function SimulatePage() {
           <div
             style={{
               padding: "10px 14px",
-              background: "var(--surface-card)",
-              borderBottom: "1px solid var(--surface-border)",
+              background: colors.washiMuted,
+              borderBottom: `2px solid ${colors.ink}`,
               fontFamily: "var(--font-display)",
               fontSize: "0.85rem",
+              fontWeight: 800,
               letterSpacing: "0.06em",
               display: "flex",
               justifyContent: "space-between",
             }}
           >
-            <span>REAL-TIME SCENARIO LOG</span>
-            <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", opacity: 0.5 }}>
+            <span>TELEMETRY CHRONICLE</span>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", opacity: 0.6 }}>
               {log.length} ENTRIES
             </span>
           </div>
@@ -552,25 +578,28 @@ export default function SimulatePage() {
               display: "flex",
               flexDirection: "column",
               gap: 6,
-              background: "#050505",
+              background: "#FAF4E8",
             }}
           >
             {log.length === 0 ? (
-              <span style={{ opacity: 0.4 }}>No simulation actions triggered yet. Run scenario to view output.</span>
+              <span style={{ opacity: 0.5, fontFamily: "var(--font-display)" }}>
+                No telemetry actions recorded. Execute scenario to initiate stream.
+              </span>
             ) : (
               log.map((entry, idx) => (
                 <div
                   key={idx}
                   style={{
                     color: entry.includes("✓")
-                      ? colors.verdeNeon
+                      ? colors.pine
                       : entry.includes("===")
-                      ? colors.amareloNeon
+                      ? colors.vermilion
                       : entry.includes("✗")
-                      ? colors.vermelho
-                      : "var(--color-branco)",
-                    opacity: 0.9,
-                    lineHeight: 1.4,
+                      ? colors.vermilion
+                      : colors.ink,
+                    lineHeight: 1.45,
+                    borderBottom: "1px dashed rgba(13, 13, 21, 0.1)",
+                    paddingBottom: 2,
                   }}
                 >
                   {entry}

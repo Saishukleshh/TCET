@@ -41,15 +41,15 @@ export default function ResponderPage() {
         minHeight: "100dvh",
         display: "flex",
         flexDirection: "column",
-        background: "var(--surface-base)",
-        color: "var(--color-branco)",
+        background: colors.washi,
+        color: colors.ink,
       }}
     >
       {/* Top Header */}
       <header
         style={{
-          background: "var(--surface-overlay)",
-          borderBottom: "2px solid var(--surface-border)",
+          background: colors.surface,
+          borderBottom: `3px solid ${colors.ink}`,
           padding: "var(--space-2) var(--space-3)",
           display: "flex",
           justifyContent: "space-between",
@@ -59,26 +59,28 @@ export default function ResponderPage() {
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <span
             style={{
-              width: 12,
-              height: 12,
+              display: "inline-block",
+              width: 14,
+              height: 14,
               borderRadius: "50%",
-              background: colors.verdeNeon,
-              boxShadow: `0 0 10px ${colors.verdeNeon}`,
+              background: colors.pine,
+              border: `2px solid ${colors.washi}`,
             }}
           />
           <div>
             <div
               style={{
-                fontFamily: "var(--font-accent)",
-                fontSize: "1.25rem",
-                color: colors.verdeNeon,
-                letterSpacing: "0.08em",
+                fontFamily: "var(--font-hero)",
+                fontSize: "1.2rem",
+                fontWeight: 700,
+                color: colors.washi,
+                letterSpacing: "0.06em",
               }}
             >
-              UNIT: RESCUE ALPHA (TEAM-001)
+              TACTICAL UNIT: RESCUE ALPHA (TEAM-001)
             </div>
-            <div style={{ fontSize: "0.75rem", opacity: 0.6, fontFamily: "var(--font-mono)" }}>
-              FIELD RESPONDER HUD · MISSION ACTIVE
+            <div style={{ fontSize: "0.75rem", color: colors.ochre, fontFamily: "var(--font-mono)" }}>
+              FIELD RESPONDER HUD · MISSION ACTIVE · SAFE CORRIDOR ENGAGED
             </div>
           </div>
         </div>
@@ -87,13 +89,15 @@ export default function ResponderPage() {
           href="/command"
           style={{
             fontFamily: "var(--font-display)",
-            padding: "6px 12px",
-            background: colors.amareloNeon,
-            color: "#000",
+            padding: "8px 16px",
+            background: colors.vermilion,
+            color: colors.washi,
             textDecoration: "none",
-            fontSize: "0.8rem",
-            border: "2px solid #000",
-            boxShadow: "2px 2px 0 #000",
+            fontSize: "0.85rem",
+            fontWeight: 700,
+            border: `2px solid ${colors.ink}`,
+            boxShadow: `2px 2px 0 ${colors.ink}`,
+            letterSpacing: "0.06em",
           }}
         >
           COMMAND CENTER →
@@ -106,8 +110,8 @@ export default function ResponderPage() {
         <div
           style={{
             width: 440,
-            background: "var(--surface-overlay)",
-            borderRight: "2px solid var(--surface-border)",
+            background: colors.washi,
+            borderRight: `3px solid ${colors.ink}`,
             padding: "var(--space-3)",
             display: "flex",
             flexDirection: "column",
@@ -118,9 +122,9 @@ export default function ResponderPage() {
           {/* Mission Objective Card */}
           <div
             style={{
-              background: "var(--surface-card)",
-              border: `3px solid ${colors.vermelho}`,
-              boxShadow: "4px 4px 0 #000",
+              background: colors.washiCard,
+              border: `3px solid ${colors.ink}`,
+              boxShadow: `4px 4px 0 ${colors.ink}`,
               padding: "var(--space-3)",
             }}
           >
@@ -128,34 +132,45 @@ export default function ResponderPage() {
               <span
                 style={{
                   fontFamily: "var(--font-display)",
-                  color: colors.vermelho,
-                  fontSize: "1rem",
+                  color: colors.vermilion,
+                  fontSize: "0.9rem",
+                  fontWeight: 700,
                   letterSpacing: "0.08em",
                 }}
               >
-                CURRENT ASSIGNMENT
+                MISSION DISPATCH DIRECTIVE
               </span>
               <span
                 style={{
-                  fontFamily: "var(--font-mono)",
-                  background: colors.vermelho,
-                  color: "#fff",
+                  fontFamily: "var(--font-display)",
+                  background: colors.vermilion,
+                  color: colors.washi,
                   fontSize: "0.7rem",
-                  fontWeight: 800,
-                  padding: "2px 6px",
+                  fontWeight: 700,
+                  padding: "3px 8px",
+                  border: `1.5px solid ${colors.ink}`,
+                  letterSpacing: "0.06em",
                 }}
               >
                 CRITICAL
               </span>
             </div>
 
-            <div style={{ fontFamily: "var(--font-display)", fontSize: "1.1rem", marginBottom: 4 }}>
+            <div
+              style={{
+                fontFamily: "var(--font-hero)",
+                fontSize: "1.15rem",
+                fontWeight: 700,
+                color: colors.surface,
+                marginBottom: 6,
+              }}
+            >
               Evacuation & Rescue — Kurla West Cluster
             </div>
 
-            <p style={{ fontSize: "0.85rem", opacity: 0.8, lineHeight: 1.4, margin: "0 0 12px 0" }}>
+            <p style={{ fontSize: "0.85rem", fontFamily: "var(--font-body)", lineHeight: 1.5, margin: "0 0 12px 0" }}>
               17 corroborating citizen reports confirm deep street waterlogging and stalled vehicles. Proceed via
-              verified safe corridor avoiding blocked LBS Marg.
+              verified safe corridor avoiding inundated LBS Marg arterial.
             </p>
 
             <div
@@ -163,29 +178,30 @@ export default function ResponderPage() {
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr",
                 gap: 8,
-                background: "var(--surface-base)",
-                padding: "8px 12px",
+                background: colors.washi,
+                border: `1.5px solid ${colors.ink}`,
+                padding: "10px 12px",
                 fontSize: "0.75rem",
                 fontFamily: "var(--font-mono)",
               }}
             >
               <div>
-                <span style={{ opacity: 0.5 }}>DESTINATION:</span>
-                <div style={{ color: colors.azulFosco, fontWeight: 700 }}>Dharavi Shelter</div>
+                <span style={{ opacity: 0.65, fontFamily: "var(--font-display)", fontSize: "0.7rem" }}>DESTINATION:</span>
+                <div style={{ color: colors.indigo, fontWeight: 700, fontSize: "0.85rem" }}>Dharavi Shelter</div>
               </div>
               <div>
-                <span style={{ opacity: 0.5 }}>CAPACITY:</span>
-                <div style={{ color: colors.verdeNeon, fontWeight: 700 }}>300 (Open)</div>
+                <span style={{ opacity: 0.65, fontFamily: "var(--font-display)", fontSize: "0.7rem" }}>CAPACITY:</span>
+                <div style={{ color: colors.pine, fontWeight: 700, fontSize: "0.85rem" }}>300 (Open)</div>
               </div>
               <div>
-                <span style={{ opacity: 0.5 }}>SAFE DISTANCE:</span>
-                <div style={{ color: "var(--color-branco)" }}>
+                <span style={{ opacity: 0.65, fontFamily: "var(--font-display)", fontSize: "0.7rem" }}>SAFE CORRIDOR:</span>
+                <div style={{ color: colors.ink, fontWeight: 700, fontSize: "0.85rem" }}>
                   {routeInfo ? `${(routeInfo.distance_m / 1000).toFixed(1)} km` : "1.2 km"}
                 </div>
               </div>
               <div>
-                <span style={{ opacity: 0.5 }}>EST. TRAVEL:</span>
-                <div style={{ color: colors.amareloNeon, fontWeight: 700 }}>
+                <span style={{ opacity: 0.65, fontFamily: "var(--font-display)", fontSize: "0.7rem" }}>EST. TIME:</span>
+                <div style={{ color: colors.ochre, fontWeight: 700, fontSize: "0.85rem" }}>
                   {routeInfo ? `~${Math.round(routeInfo.duration_sec / 60)} min` : "~7 min"}
                 </div>
               </div>
@@ -197,21 +213,22 @@ export default function ResponderPage() {
             <div
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "0.8rem",
-                opacity: 0.7,
+                fontSize: "0.85rem",
+                fontWeight: 700,
+                color: colors.surface,
                 letterSpacing: "0.06em",
                 marginBottom: 8,
               }}
             >
-              UPDATE FIELD STATUS
+              FIELD RESPONDER OPERATIONAL STATUS
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
               {[
-                { key: "assigned", label: "ASSIGNED", col: colors.amareloNeon },
-                { key: "en_route", label: "EN ROUTE", col: colors.laranja },
-                { key: "on_scene", label: "ON SCENE", col: colors.rosaNeon },
-                { key: "evacuating", label: "EVACUATING", col: colors.azulFosco },
-                { key: "complete", label: "MISSION DONE", col: colors.verdeNeon },
+                { key: "assigned", label: "ASSIGNED", col: colors.ochre, textColor: colors.ink },
+                { key: "en_route", label: "EN ROUTE", col: colors.vermilion, textColor: colors.washi },
+                { key: "on_scene", label: "ON SCENE", col: colors.indigo, textColor: colors.washi },
+                { key: "evacuating", label: "EVACUATING", col: colors.surface, textColor: colors.washi },
+                { key: "complete", label: "MISSION DONE", col: colors.pine, textColor: colors.washi },
               ].map((st) => (
                 <button
                   key={st.key}
@@ -219,17 +236,17 @@ export default function ResponderPage() {
                   style={{
                     padding: "10px 8px",
                     fontFamily: "var(--font-display)",
-                    fontSize: "0.85rem",
+                    fontSize: "0.8rem",
                     letterSpacing: "0.05em",
-                    background: status === st.key ? st.col : "var(--surface-card)",
-                    color: status === st.key ? "#000" : "var(--color-branco)",
-                    border: status === st.key ? "2px solid #000" : "1px solid var(--surface-border)",
-                    boxShadow: status === st.key ? "2px 2px 0 #000" : "none",
+                    background: status === st.key ? st.col : colors.washiCard,
+                    color: status === st.key ? st.textColor : colors.ink,
+                    border: `2px solid ${colors.ink}`,
+                    boxShadow: status === st.key ? `3px 3px 0 ${colors.ink}` : `1px 1px 0 ${colors.ink}`,
                     cursor: "pointer",
-                    fontWeight: 800,
+                    fontWeight: 700,
                   }}
                 >
-                  {status === st.key ? `✓ ${st.label}` : st.label}
+                  {status === st.key ? `[x] ${st.label}` : st.label}
                 </button>
               ))}
             </div>
@@ -238,18 +255,19 @@ export default function ResponderPage() {
           {/* Safe Corridor Protocol Note */}
           <div
             style={{
-              background: "rgba(0, 255, 0, 0.08)",
-              border: `2px dashed ${colors.verdeNeon}`,
+              background: colors.washiCard,
+              border: `2px solid ${colors.pine}`,
               padding: "12px",
               fontSize: "0.8rem",
-              lineHeight: 1.45,
+              lineHeight: 1.5,
+              boxShadow: `2px 2px 0 ${colors.ink}`,
             }}
           >
-            <div style={{ fontFamily: "var(--font-display)", color: colors.verdeNeon, marginBottom: 4 }}>
+            <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, color: colors.pine, marginBottom: 4 }}>
               DYNAMIC EVACUATION ROUTING
             </div>
-            Our OSRM engine automatically recalculates around flooded zones and blocked roads. If a segment becomes
-            impassable, the route will recalculate without crossing flood boundaries.
+            Our OSRM engine automatically computes corridors around flooded hazard polygons and blocked segments.
+            If route conditions deteriorate, the path recalculates avoiding all active flood polygons.
           </div>
         </div>
 

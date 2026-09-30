@@ -29,7 +29,7 @@ export default function IncidentDetailPage({ params }: Props) {
       setMsg("Allocating response teams via Hungarian optimization...");
       const res = await allocateResources([incId]);
       if (res.assignments?.length) {
-        setMsg(`✓ Successfully assigned Team #${res.assignments[0].team_id} (ETA ~${res.assignments[0].eta_min} min)`);
+        setMsg(`[ASSIGNED] Team #${res.assignments[0].team_id} dispatched (ETA ~${res.assignments[0].eta_min} min)`);
       } else {
         setMsg("No available teams to assign at this moment.");
       }
@@ -53,7 +53,7 @@ export default function IncidentDetailPage({ params }: Props) {
         }),
       });
       await approveAlert(alert.id, "Incident Detail Officer");
-      setMsg("✓ Emergency Alert broadcast sent to citizens & emergency responders.");
+      setMsg("[TRANSMITTED] Emergency Alert broadcast sent to citizens & emergency responders.");
     } catch (err) {
       setMsg("Alert broadcast failed.");
     }
@@ -63,8 +63,8 @@ export default function IncidentDetailPage({ params }: Props) {
     <div
       style={{
         minHeight: "100dvh",
-        background: "var(--surface-base)",
-        color: "var(--color-branco)",
+        background: colors.washi,
+        color: colors.ink,
         padding: "var(--space-4)",
       }}
     >
@@ -75,7 +75,7 @@ export default function IncidentDetailPage({ params }: Props) {
           justifyContent: "space-between",
           alignItems: "center",
           marginBottom: "var(--space-3)",
-          borderBottom: "2px solid var(--surface-border)",
+          borderBottom: `2px solid ${colors.ink}`,
           paddingBottom: "var(--space-2)",
         }}
       >
@@ -85,14 +85,22 @@ export default function IncidentDetailPage({ params }: Props) {
             style={{
               fontFamily: "var(--font-display)",
               fontSize: "0.85rem",
-              color: colors.amareloNeon,
+              fontWeight: 700,
+              color: colors.indigo,
               textDecoration: "none",
             }}
           >
             ← ALL INCIDENTS
           </Link>
           <span style={{ opacity: 0.4 }}>/</span>
-          <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.85rem", color: colors.rosaNeon }}>
+          <span
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "0.85rem",
+              color: colors.vermilion,
+              fontWeight: 700,
+            }}
+          >
             INCIDENT #{id.slice(0, 8)}
           </span>
         </div>
@@ -101,12 +109,15 @@ export default function IncidentDetailPage({ params }: Props) {
           href="/command"
           style={{
             fontFamily: "var(--font-display)",
-            padding: "6px 14px",
-            background: colors.amareloNeon,
-            color: "#000",
+            padding: "8px 16px",
+            background: colors.vermilion,
+            color: colors.washi,
             textDecoration: "none",
-            border: "2px solid #000",
-            boxShadow: "2px 2px 0 #000",
+            fontWeight: 700,
+            fontSize: "0.85rem",
+            border: `2px solid ${colors.ink}`,
+            boxShadow: `2px 2px 0 ${colors.ink}`,
+            letterSpacing: "0.06em",
           }}
         >
           OPEN COMMAND MAP →
@@ -114,21 +125,27 @@ export default function IncidentDetailPage({ params }: Props) {
       </div>
 
       {loading ? (
-        <div style={{ textAlign: "center", padding: 60, opacity: 0.6 }}>Loading incident #{id}...</div>
+        <div style={{ textAlign: "center", padding: 60, fontFamily: "var(--font-display)", color: colors.indigo }}>
+          Loading incident #{id}...
+        </div>
       ) : !incident ? (
-        <div style={{ textAlign: "center", padding: 60, opacity: 0.6 }}>Incident not found.</div>
+        <div style={{ textAlign: "center", padding: 60, fontFamily: "var(--font-display)", color: colors.vermilion }}>
+          Incident not found.
+        </div>
       ) : (
         <div>
           {msg && (
             <div
               style={{
-                background: "rgba(0, 255, 0, 0.15)",
-                border: `2px solid ${colors.verdeNeon}`,
-                color: colors.verdeNeon,
+                background: colors.washiCard,
+                border: `2px solid ${colors.pine}`,
+                color: colors.pine,
                 padding: "10px 16px",
                 marginBottom: 16,
                 fontFamily: "var(--font-mono)",
                 fontSize: "0.85rem",
+                boxShadow: `3px 3px 0 ${colors.ink}`,
+                fontWeight: 600,
               }}
             >
               {msg}
@@ -148,24 +165,39 @@ export default function IncidentDetailPage({ params }: Props) {
             {/* Right: Geographic Context Mini-Map */}
             <div
               style={{
-                background: "var(--surface-overlay)",
-                border: "2px solid var(--surface-border)",
-                height: 480,
+                background: colors.washiCard,
+                border: `2px solid ${colors.ink}`,
+                boxShadow: `3px 3px 0 ${colors.ink}`,
+                height: 520,
                 display: "flex",
                 flexDirection: "column",
               }}
             >
               <div
                 style={{
-                  padding: "8px 12px",
-                  background: "var(--surface-card)",
-                  borderBottom: "1px solid var(--surface-border)",
+                  padding: "10px 14px",
+                  background: colors.surface,
+                  borderBottom: `2px solid ${colors.ink}`,
                   fontFamily: "var(--font-display)",
-                  fontSize: "0.8rem",
-                  letterSpacing: "0.05em",
+                  fontSize: "0.85rem",
+                  fontWeight: 700,
+                  color: colors.washi,
+                  letterSpacing: "0.06em",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                 }}
               >
-                INCIDENT GEOLOCATION & NEARBY RESOURCES
+                <span>GEOGRAPHIC CONTEXT & NEARBY STATIONS</span>
+                <span
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "0.75rem",
+                    color: colors.ochre,
+                  }}
+                >
+                  {incident.lat.toFixed(4)}°N, {incident.lng.toFixed(4)}°E
+                </span>
               </div>
               <div style={{ flex: 1, position: "relative" }}>
                 <MapView

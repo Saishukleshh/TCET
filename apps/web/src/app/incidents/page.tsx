@@ -42,8 +42,8 @@ export default function IncidentsPage() {
     <div
       style={{
         minHeight: "100dvh",
-        background: "var(--surface-base)",
-        color: "var(--color-branco)",
+        background: colors.washi,
+        color: colors.ink,
         padding: "var(--space-4)",
       }}
     >
@@ -54,7 +54,7 @@ export default function IncidentsPage() {
           justifyContent: "space-between",
           alignItems: "center",
           marginBottom: "var(--space-4)",
-          borderBottom: "2px solid var(--surface-border)",
+          borderBottom: `2.5px solid ${colors.ink}`,
           paddingBottom: "var(--space-2)",
         }}
       >
@@ -62,21 +62,30 @@ export default function IncidentsPage() {
           <div style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
             <h1
               style={{
-                fontFamily: "var(--font-accent)",
+                fontFamily: "var(--font-display)",
                 fontSize: "var(--text-h1)",
-                color: colors.amareloNeon,
+                color: colors.ink,
                 letterSpacing: "0.06em",
                 margin: 0,
               }}
             >
               INCIDENT TRIAGE QUEUE
             </h1>
-            <span style={{ fontFamily: "var(--font-mono)", color: colors.rosaNeon, fontSize: "0.85rem" }}>
-              {filtered.length} INCIDENTS RECORDED
+            <span
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "0.75rem",
+                border: `2px solid ${colors.vermilion}`,
+                color: colors.vermilion,
+                padding: "2px 8px",
+                fontWeight: 800,
+              }}
+            >
+              {filtered.length} SECTORS RECORDED
             </span>
           </div>
-          <p style={{ margin: "4px 0 0", opacity: 0.6, fontSize: "0.85rem" }}>
-            Real-time clustering and verification. Duplicated citizen reports consolidated into singular operational incidents.
+          <p style={{ margin: "4px 0 0", opacity: 0.7, fontSize: "0.85rem", fontFamily: "var(--font-body)" }}>
+            Real-time clustering and verification. Duplicated citizen distress reports consolidated into singular operational incidents.
           </p>
         </div>
 
@@ -84,15 +93,16 @@ export default function IncidentsPage() {
           href="/command"
           style={{
             fontFamily: "var(--font-display)",
+            fontWeight: 700,
             padding: "8px 16px",
-            background: colors.amareloNeon,
-            color: "#000",
+            background: colors.vermilion,
+            color: "#FAF4E8",
             textDecoration: "none",
-            border: "2px solid #000",
-            boxShadow: "3px 3px 0 #000",
+            border: `2px solid ${colors.ink}`,
+            boxShadow: `3px 3px 0 ${colors.ink}`,
           }}
         >
-          ← BACK TO COMMAND
+          ← COMMAND MAP
         </Link>
       </div>
 
@@ -100,15 +110,16 @@ export default function IncidentsPage() {
       <div
         style={{
           display: "flex",
-          gap: 16,
+          gap: 20,
           marginBottom: "var(--space-3)",
-          background: "var(--surface-overlay)",
+          background: colors.washiCard,
           padding: "12px 16px",
-          border: "1px solid var(--surface-border)",
+          border: `2px solid ${colors.ink}`,
+          boxShadow: `3px 3px 0 ${colors.ink}`,
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: "0.75rem", opacity: 0.7, fontFamily: "var(--font-display)" }}>
+          <span style={{ fontSize: "0.75rem", fontWeight: 700, fontFamily: "var(--font-display)" }}>
             SEVERITY:
           </span>
           {["all", "critical", "warning", "watch"].map((s) => (
@@ -116,12 +127,14 @@ export default function IncidentsPage() {
               key={s}
               onClick={() => setFilterSev(s)}
               style={{
-                background: filterSev === s ? colors.amareloNeon : "var(--surface-card)",
-                color: filterSev === s ? "#000" : "var(--color-branco)",
+                background: filterSev === s ? colors.vermilion : colors.washiMuted,
+                color: filterSev === s ? "#FAF4E8" : colors.ink,
                 fontFamily: "var(--font-display)",
                 fontSize: "0.75rem",
-                padding: "4px 10px",
-                border: "1px solid var(--surface-border)",
+                fontWeight: 700,
+                padding: "5px 12px",
+                border: `1.5px solid ${colors.ink}`,
+                boxShadow: filterSev === s ? `2px 2px 0 ${colors.ink}` : "none",
                 cursor: "pointer",
               }}
             >
@@ -131,20 +144,22 @@ export default function IncidentsPage() {
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: "0.75rem", opacity: 0.7, fontFamily: "var(--font-display)" }}>
-            STATUS:
+          <span style={{ fontSize: "0.75rem", fontWeight: 700, fontFamily: "var(--font-display)" }}>
+            VERIFICATION:
           </span>
           {["all", "verified", "probable", "unverified"].map((st) => (
             <button
               key={st}
               onClick={() => setFilterStat(st)}
               style={{
-                background: filterStat === st ? colors.verdeNeon : "var(--surface-card)",
-                color: filterStat === st ? "#000" : "var(--color-branco)",
+                background: filterStat === st ? colors.pine : colors.washiMuted,
+                color: filterStat === st ? "#FAF4E8" : colors.ink,
                 fontFamily: "var(--font-display)",
                 fontSize: "0.75rem",
-                padding: "4px 10px",
-                border: "1px solid var(--surface-border)",
+                fontWeight: 700,
+                padding: "5px 12px",
+                border: `1.5px solid ${colors.ink}`,
+                boxShadow: filterStat === st ? `2px 2px 0 ${colors.ink}` : "none",
                 cursor: "pointer",
               }}
             >
@@ -156,32 +171,35 @@ export default function IncidentsPage() {
 
       {/* Incident Cards Grid */}
       {loading ? (
-        <div style={{ textAlign: "center", padding: 40, opacity: 0.5 }}>Loading incident queue...</div>
+        <div style={{ textAlign: "center", padding: 40, opacity: 0.6, fontFamily: "var(--font-display)" }}>
+          Loading incident queue...
+        </div>
       ) : filtered.length === 0 ? (
         <div
           style={{
             textAlign: "center",
             padding: 60,
-            background: "var(--surface-overlay)",
-            border: "1px dashed var(--surface-border)",
+            background: colors.washiCard,
+            border: `2px dashed ${colors.ink}`,
           }}
         >
-          <div style={{ fontFamily: "var(--font-display)", fontSize: "1.2rem", opacity: 0.5 }}>
-            NO INCIDENTS MATCHING FILTER
+          <div style={{ fontFamily: "var(--font-display)", fontSize: "1.2rem", opacity: 0.6 }}>
+            NO INCIDENTS MATCHING CRITERIA
           </div>
         </div>
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))", gap: 16 }}>
           {filtered.map((inc) => {
-            const sevCol = severityColor[inc.severity] ?? colors.vermelho;
-            const statCol = confidenceColor[inc.status] ?? colors.branco;
+            const sevCol = severityColor[inc.severity] ?? colors.vermilion;
+            const statCol = confidenceColor[inc.status] ?? colors.pine;
             return (
               <div
                 key={inc.id}
                 style={{
-                  background: "var(--surface-overlay)",
-                  border: `3px solid ${sevCol}`,
-                  boxShadow: "4px 4px 0 #000",
+                  background: colors.washiCard,
+                  border: `3px solid ${colors.ink}`,
+                  borderLeft: `6px solid ${sevCol}`,
+                  boxShadow: `4px 4px 0 ${colors.ink}`,
                   padding: "var(--space-3)",
                   display: "flex",
                   flexDirection: "column",
@@ -200,7 +218,8 @@ export default function IncidentsPage() {
                     <span
                       style={{
                         fontFamily: "var(--font-display)",
-                        fontSize: "1.1rem",
+                        fontSize: "1.05rem",
+                        fontWeight: 800,
                         color: sevCol,
                         letterSpacing: "0.06em",
                       }}
@@ -211,7 +230,7 @@ export default function IncidentsPage() {
                       style={{
                         fontFamily: "var(--font-mono)",
                         fontSize: "0.75rem",
-                        color: "var(--color-branco)",
+                        color: colors.ink,
                         opacity: 0.6,
                       }}
                     >
@@ -224,9 +243,10 @@ export default function IncidentsPage() {
                       style={{
                         fontFamily: "var(--font-display)",
                         fontSize: "0.7rem",
-                        background: inc.status !== "unverified" ? `${statCol}22` : "transparent",
+                        fontWeight: 700,
+                        background: colors.washiMuted,
                         color: statCol,
-                        border: inc.status === "unverified" ? `1px dashed ${colors.branco}` : `1px solid ${statCol}`,
+                        border: `1.5px solid ${statCol}`,
                         padding: "2px 8px",
                       }}
                     >
@@ -237,19 +257,20 @@ export default function IncidentsPage() {
                       style={{
                         fontFamily: "var(--font-mono)",
                         fontSize: "0.7rem",
-                        background: "var(--surface-card)",
+                        background: colors.washiMuted,
                         padding: "2px 8px",
-                        border: "1px solid var(--surface-border)",
+                        border: `1px solid ${colors.ink}`,
                       }}
                     >
-                      {inc.report_count} clustered reports
+                      {inc.report_count} clustered signals
                     </span>
 
                     <span
                       style={{
                         fontFamily: "var(--font-mono)",
                         fontSize: "0.7rem",
-                        color: colors.amareloNeon,
+                        color: colors.indigo,
+                        fontWeight: 800,
                         padding: "2px 6px",
                       }}
                     >
@@ -257,8 +278,8 @@ export default function IncidentsPage() {
                     </span>
                   </div>
 
-                  <div style={{ fontSize: "0.8rem", color: "var(--color-branco)", opacity: 0.8, marginBottom: 12 }}>
-                    {inc.recommended_action ?? "Monitor condition; assign observation team."}
+                  <div style={{ fontSize: "0.85rem", opacity: 0.85, lineHeight: 1.45, marginBottom: 12 }}>
+                    {inc.recommended_action ?? "Monitor conditions closely; dispatch field assessment team."}
                   </div>
                 </div>
 
@@ -267,19 +288,20 @@ export default function IncidentsPage() {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    borderTop: "1px solid var(--surface-border)",
+                    borderTop: `1px solid ${colors.washiMuted}`,
                     paddingTop: 8,
                   }}
                 >
-                  <span style={{ fontSize: "0.7rem", opacity: 0.5 }}>
+                  <span style={{ fontSize: "0.75rem", opacity: 0.6, fontFamily: "var(--font-mono)" }}>
                     {inc.lat.toFixed(4)}°N, {inc.lng.toFixed(4)}°E
                   </span>
                   <Link
                     href={`/incidents/${inc.id}`}
                     style={{
                       fontFamily: "var(--font-display)",
-                      fontSize: "0.8rem",
-                      color: colors.rosaNeon,
+                      fontSize: "0.85rem",
+                      fontWeight: 700,
+                      color: colors.indigo,
                       textDecoration: "none",
                       letterSpacing: "0.05em",
                     }}

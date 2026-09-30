@@ -40,20 +40,21 @@ export default function EvidencePanel({
   onTriggerAlert,
   onClose,
 }: EvidencePanelProps) {
-  const sevCol = severityColor[incident.severity] ?? colors.vermelho;
-  const confCol = confidenceColor[incident.status] ?? colors.branco;
+  const sevCol = severityColor[incident.severity] ?? colors.vermilion;
+  const confCol = confidenceColor[incident.status] ?? colors.pine;
   const imgResult = incident.evidence?.image_result;
 
   return (
     <div
       style={{
-        background: "var(--surface-overlay)",
-        border: `3px solid ${sevCol}`,
-        boxShadow: "5px 5px 0 #000000",
+        background: colors.washiCard,
+        border: `3px solid ${colors.ink}`,
+        boxShadow: `4px 4px 0 ${colors.ink}`,
         padding: "var(--space-3)",
         display: "flex",
         flexDirection: "column",
         gap: "var(--space-2)",
+        color: colors.ink,
       }}
     >
       {/* Header */}
@@ -62,7 +63,7 @@ export default function EvidencePanel({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "flex-start",
-          borderBottom: "1px solid var(--surface-border)",
+          borderBottom: `2px solid ${colors.ink}`,
           paddingBottom: "var(--space-1)",
         }}
       >
@@ -72,7 +73,8 @@ export default function EvidencePanel({
               style={{
                 fontFamily: "var(--font-display)",
                 fontSize: "1.1rem",
-                color: sevCol,
+                fontWeight: 700,
+                color: colors.ink,
                 letterSpacing: "0.06em",
               }}
             >
@@ -80,10 +82,10 @@ export default function EvidencePanel({
             </span>
             <span
               style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.7rem",
-                background: sevCol,
-                color: "#000",
+                fontFamily: "var(--font-display)",
+                fontSize: "0.75rem",
+                border: `2px solid ${sevCol}`,
+                color: sevCol,
                 fontWeight: 800,
                 padding: "1px 6px",
               }}
@@ -91,7 +93,7 @@ export default function EvidencePanel({
               {incident.severity.toUpperCase()}
             </span>
           </div>
-          <div style={{ fontSize: "0.75rem", color: "var(--color-branco)", opacity: 0.6 }}>
+          <div style={{ fontSize: "0.75rem", color: colors.ink, opacity: 0.6, fontFamily: "var(--font-mono)" }}>
             Coordinates: {incident.lat.toFixed(4)}°N, {incident.lng.toFixed(4)}°E
           </div>
         </div>
@@ -101,10 +103,11 @@ export default function EvidencePanel({
             onClick={onClose}
             style={{
               background: "transparent",
-              border: "none",
-              color: "var(--color-branco)",
+              border: `1px solid ${colors.ink}`,
+              color: colors.ink,
               cursor: "pointer",
-              fontSize: "1rem",
+              fontSize: "0.9rem",
+              padding: "2px 6px",
             }}
           >
             ✕
@@ -112,25 +115,26 @@ export default function EvidencePanel({
         )}
       </div>
 
-      {/* Verification status & confidence */}
+      {/* Verification Status & Confidence */}
       <div
         style={{
           display: "flex",
           alignItems: "center",
           gap: 12,
-          background: "var(--surface-card)",
+          background: colors.washiMuted,
           padding: "8px 12px",
-          border: "1px solid var(--surface-border)",
+          border: `1.5px solid ${colors.ink}`,
         }}
       >
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: "0.65rem", color: "var(--color-branco)", opacity: 0.7 }}>
+          <div style={{ fontSize: "0.65rem", color: colors.ink, opacity: 0.7, fontFamily: "var(--font-display)" }}>
             VERIFICATION STATUS
           </div>
           <div
             style={{
               fontFamily: "var(--font-display)",
               fontSize: "1rem",
+              fontWeight: 700,
               color: confCol,
               letterSpacing: "0.05em",
             }}
@@ -139,15 +143,15 @@ export default function EvidencePanel({
           </div>
         </div>
         <div style={{ textAlign: "right" }}>
-          <div style={{ fontSize: "0.65rem", color: "var(--color-branco)", opacity: 0.7 }}>
-            AI CONFIDENCE
+          <div style={{ fontSize: "0.65rem", color: colors.ink, opacity: 0.7, fontFamily: "var(--font-display)" }}>
+            CONFIDENCE RATING
           </div>
           <div
             style={{
               fontFamily: "var(--font-mono)",
               fontSize: "1.1rem",
               fontWeight: 800,
-              color: colors.amareloNeon,
+              color: colors.indigo,
             }}
           >
             {(incident.confidence * 100).toFixed(0)}%
@@ -155,35 +159,38 @@ export default function EvidencePanel({
         </div>
       </div>
 
-      {/* Evidence breakdown */}
+      {/* Evidence Breakdown */}
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
         <div
           style={{
             fontFamily: "var(--font-display)",
             fontSize: "0.8rem",
-            color: "var(--color-branco)",
-            opacity: 0.8,
+            color: colors.ink,
+            fontWeight: 700,
             letterSpacing: "0.05em",
           }}
         >
-          MULTI-SIGNAL EVIDENCE BREAKDOWN
+          MULTI-SIGNAL CORROBORATION
         </div>
 
-        {/* Reports deduplication metric */}
+        {/* Reports metric */}
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
             padding: "6px 8px",
-            background: "rgba(255, 255, 255, 0.03)",
+            background: colors.washiMuted,
             fontSize: "0.8rem",
-            borderLeft: `3px solid ${colors.amareloNeon}`,
+            borderLeft: `4px solid ${colors.ochre}`,
+            borderTop: `1px solid ${colors.ink}`,
+            borderRight: `1px solid ${colors.ink}`,
+            borderBottom: `1px solid ${colors.ink}`,
           }}
         >
           <span>Corroborating Reports</span>
-          <span style={{ fontFamily: "var(--font-mono)", color: colors.amareloNeon, fontWeight: 700 }}>
-            {incident.report_count} clustered reports
+          <span style={{ fontFamily: "var(--font-mono)", color: colors.ochre, fontWeight: 700 }}>
+            {incident.report_count} clustered signals
           </span>
         </div>
 
@@ -194,18 +201,21 @@ export default function EvidencePanel({
             justifyContent: "space-between",
             alignItems: "center",
             padding: "6px 8px",
-            background: "rgba(255, 255, 255, 0.03)",
+            background: colors.washiMuted,
             fontSize: "0.8rem",
-            borderLeft: `3px solid ${imgResult?.shows_flooding ? colors.verdeNeon : colors.laranja}`,
+            borderLeft: `4px solid ${imgResult?.shows_flooding ? colors.pine : colors.ochre}`,
+            borderTop: `1px solid ${colors.ink}`,
+            borderRight: `1px solid ${colors.ink}`,
+            borderBottom: `1px solid ${colors.ink}`,
           }}
         >
-          <span>Vision LLM Analysis</span>
-          <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", color: "var(--color-branco)" }}>
+          <span>Visual Assessment</span>
+          <span style={{ fontFamily: "var(--font-display)", fontSize: "0.75rem", fontWeight: 700 }}>
             {imgResult ? (
               imgResult.shows_flooding ? (
-                <span style={{ color: colors.verdeNeon }}>FLOOD CONFIRMED ({imgResult.depth_estimate ?? "depth unknown"})</span>
+                <span style={{ color: colors.pine }}>CONFIRMED FLOOD ({imgResult.depth_estimate ?? "depth unverified"})</span>
               ) : (
-                <span>No severe water</span>
+                <span>No inundation</span>
               )
             ) : (
               <span style={{ opacity: 0.6 }}>Sensor / Heuristic fallback</span>
@@ -220,13 +230,16 @@ export default function EvidencePanel({
             justifyContent: "space-between",
             alignItems: "center",
             padding: "6px 8px",
-            background: "rgba(255, 255, 255, 0.03)",
+            background: colors.washiMuted,
             fontSize: "0.8rem",
-            borderLeft: `3px solid ${colors.azulFosco}`,
+            borderLeft: `4px solid ${colors.prussian}`,
+            borderTop: `1px solid ${colors.ink}`,
+            borderRight: `1px solid ${colors.ink}`,
+            borderBottom: `1px solid ${colors.ink}`,
           }}
         >
-          <span>Localized Rainfall</span>
-          <span style={{ fontFamily: "var(--font-mono)", color: colors.azulFosco, fontWeight: 700 }}>
+          <span>Station Rainfall</span>
+          <span style={{ fontFamily: "var(--font-mono)", color: colors.prussian, fontWeight: 700 }}>
             {incident.evidence?.rainfall_mm_h?.toFixed(1) ?? "45.0"} mm/h
           </span>
         </div>
@@ -236,8 +249,8 @@ export default function EvidencePanel({
       {incident.recommended_action && (
         <div
           style={{
-            background: "rgba(255, 102, 0, 0.08)",
-            border: `2px dashed ${colors.laranja}`,
+            background: colors.washiMuted,
+            border: `2px dashed ${colors.ochre}`,
             padding: "8px 10px",
           }}
         >
@@ -245,14 +258,15 @@ export default function EvidencePanel({
             style={{
               fontFamily: "var(--font-display)",
               fontSize: "0.75rem",
-              color: colors.laranja,
+              fontWeight: 700,
+              color: colors.ochre,
               letterSpacing: "0.05em",
               marginBottom: 4,
             }}
           >
-            RECOMMENDED RESPONSE ACTION
+            RECOMMENDED PROTOCOL
           </div>
-          <div style={{ fontSize: "0.85rem", color: "var(--color-branco)" }}>
+          <div style={{ fontSize: "0.85rem", color: colors.ink }}>
             {incident.recommended_action}
           </div>
         </div>
@@ -265,19 +279,19 @@ export default function EvidencePanel({
             onClick={() => onAllocateTeam(incident.id)}
             style={{
               flex: 1,
-              background: colors.rosaNeon,
-              color: "#000",
+              background: colors.indigo,
+              color: "#FAF4E8",
               fontFamily: "var(--font-display)",
               fontSize: "0.85rem",
-              fontWeight: 800,
+              fontWeight: 700,
               letterSpacing: "0.05em",
               padding: "8px 12px",
-              border: "2px solid #000",
-              boxShadow: "2px 2px 0 #000",
+              border: `2px solid ${colors.ink}`,
+              boxShadow: `3px 3px 0 ${colors.ink}`,
               cursor: "pointer",
             }}
           >
-            {incident.assigned_team_id ? "RE-DISPATCH TEAM" : "DISPATCH RESCUE TEAM"}
+            {incident.assigned_team_id ? "RE-DISPATCH UNIT" : "DISPATCH RESCUE UNIT"}
           </button>
         )}
 
@@ -286,19 +300,19 @@ export default function EvidencePanel({
             onClick={() => onTriggerAlert(incident.id)}
             style={{
               flex: 1,
-              background: colors.vermelho,
-              color: "#fff",
+              background: colors.vermilion,
+              color: "#FAF4E8",
               fontFamily: "var(--font-display)",
               fontSize: "0.85rem",
-              fontWeight: 800,
+              fontWeight: 700,
               letterSpacing: "0.05em",
               padding: "8px 12px",
-              border: "2px solid #000",
-              boxShadow: "2px 2px 0 #000",
+              border: `2px solid ${colors.ink}`,
+              boxShadow: `3px 3px 0 ${colors.ink}`,
               cursor: "pointer",
             }}
           >
-            ISSUE BROADCAST ALERT
+            ISSUE BROADCAST
           </button>
         )}
       </div>

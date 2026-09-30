@@ -91,9 +91,9 @@ interface MapViewProps {
 }
 
 const SEVERITY_COLOR: Record<string, string> = {
-  critical: colors.vermelho,
-  warning: colors.laranja,
-  watch: colors.amareloNeon,
+  critical: colors.vermilion,
+  warning:  colors.ochre,
+  watch:    colors.indigo,
 };
 
 export default function MapView({
@@ -137,25 +137,25 @@ export default function MapView({
           sources: {
             osm: {
               type: "raster",
-              tiles: [
-                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-              ],
+              tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
               tileSize: 256,
-              attribution: "© OpenStreetMap contributors",
+              attribution: "© OpenStreetMap contributors · Ukiyo-e Cartography",
             },
           },
           layers: [
             {
-              id: "osm_dark_layer",
+              id: "osm_woodblock_layer",
               type: "raster",
               source: "osm",
               minzoom: 0,
               maxzoom: 19,
               paint: {
-                "raster-brightness-max": 0.45,
-                "raster-brightness-min": 0.05,
-                "raster-contrast": 0.35,
-                "raster-saturation": -0.85,
+                // Aged washi paper warm cartographic styling
+                "raster-brightness-max": 0.94,
+                "raster-brightness-min": 0.08,
+                "raster-contrast": 0.15,
+                "raster-saturation": -0.65,
+                "raster-hue-rotate": 35, // warm washi paper tone
               },
             },
           ],
@@ -167,7 +167,7 @@ export default function MapView({
       map.addControl(new NavigationControl(), "top-right");
 
       map.on("load", () => {
-        // ── 1. Zone risk layer ──────────────────────────────────────
+        // ── 1. Zone Risk Polygons ──────────────────────────────────
         map.addSource("zones", {
           type: "geojson",
           data: { type: "FeatureCollection", features: [] },
@@ -182,16 +182,11 @@ export default function MapView({
               "interpolate",
               ["linear"],
               ["coalesce", ["get", "risk"], 0],
-              0.0,
-              "rgba(0, 255, 0, 0.25)",
-              0.25,
-              "rgba(255, 255, 0, 0.35)",
-              0.45,
-              "rgba(255, 102, 0, 0.45)",
-              0.7,
-              "rgba(255, 0, 0, 0.6)",
-              1.0,
-              "rgba(255, 0, 0, 0.75)",
+              0.0,  "rgba(45, 127, 103, 0.35)",  // Pine green (Safe)
+              0.25, "rgba(42, 64, 86, 0.40)",    // Indigo (Watch)
+              0.45, "rgba(204, 119, 34, 0.55)",  // Ochre (Warning)
+              0.70, "rgba(232, 93, 53, 0.70)",   // Vermilion (Critical)
+              1.0,  "rgba(232, 93, 53, 0.85)",
             ],
             "fill-opacity": 0.85,
           },
@@ -206,14 +201,10 @@ export default function MapView({
               "interpolate",
               ["linear"],
               ["coalesce", ["get", "risk"], 0],
-              0.0,
-              colors.verdeNeon,
-              0.25,
-              colors.amareloNeon,
-              0.45,
-              colors.laranja,
-              0.7,
-              colors.vermelho,
+              0.0,  colors.pine,
+              0.25, colors.indigo,
+              0.45, colors.ochre,
+              0.70, colors.vermilion,
             ],
             "line-width": 3,
           },
@@ -230,7 +221,7 @@ export default function MapView({
           type: "line",
           source: "blocked-roads",
           paint: {
-            "line-color": "#000000",
+            "line-color": colors.ink,
             "line-width": 8,
           },
         });
@@ -240,9 +231,9 @@ export default function MapView({
           type: "line",
           source: "blocked-roads",
           paint: {
-            "line-color": colors.vermelho,
+            "line-color": colors.vermilion,
             "line-width": 5,
-            "line-dasharray": [2, 1],
+            "line-dasharray": [3, 2],
           },
         });
 
@@ -257,7 +248,7 @@ export default function MapView({
           type: "line",
           source: "route",
           paint: {
-            "line-color": "#000000",
+            "line-color": colors.ink,
             "line-width": 8,
           },
         });
@@ -267,7 +258,7 @@ export default function MapView({
           type: "line",
           source: "route",
           paint: {
-            "line-color": colors.verdeNeon,
+            "line-color": colors.pine,
             "line-width": 5,
           },
         });
@@ -283,10 +274,10 @@ export default function MapView({
           type: "circle",
           source: "shelters",
           paint: {
-            "circle-radius": 9,
-            "circle-color": colors.azulFosco,
-            "circle-stroke-width": 2,
-            "circle-stroke-color": colors.branco,
+            "circle-radius": 10,
+            "circle-color": colors.prussian,
+            "circle-stroke-width": 2.5,
+            "circle-stroke-color": colors.washiCard,
           },
         });
 
@@ -301,10 +292,10 @@ export default function MapView({
           type: "circle",
           source: "teams",
           paint: {
-            "circle-radius": 8,
-            "circle-color": colors.rosaNeon,
+            "circle-radius": 9,
+            "circle-color": colors.ochre,
             "circle-stroke-width": 2,
-            "circle-stroke-color": "#000",
+            "circle-stroke-color": colors.ink,
           },
         });
 
@@ -323,31 +314,24 @@ export default function MapView({
               "interpolate",
               ["linear"],
               ["get", "report_count"],
-              1,
-              16,
-              10,
-              26,
-              23,
-              36,
+              1, 16,
+              10, 26,
+              23, 36,
             ],
             "circle-color": [
               "match",
               ["get", "severity"],
-              "critical",
-              "rgba(255, 0, 0, 0.3)",
-              "warning",
-              "rgba(255, 102, 0, 0.3)",
-              "rgba(255, 255, 0, 0.3)",
+              "critical", "rgba(232, 93, 53, 0.25)",
+              "warning",  "rgba(204, 119, 34, 0.25)",
+              "rgba(42, 64, 86, 0.25)",
             ],
-            "circle-stroke-width": 1,
+            "circle-stroke-width": 1.5,
             "circle-stroke-color": [
               "match",
               ["get", "severity"],
-              "critical",
-              colors.vermelho,
-              "warning",
-              colors.laranja,
-              colors.amareloNeon,
+              "critical", colors.vermilion,
+              "warning",  colors.ochre,
+              colors.indigo,
             ],
           },
         });
@@ -361,24 +345,19 @@ export default function MapView({
               "interpolate",
               ["linear"],
               ["get", "report_count"],
-              1,
-              9,
-              10,
-              15,
-              23,
-              20,
+              1, 9,
+              10, 15,
+              23, 20,
             ],
             "circle-color": [
               "match",
               ["get", "severity"],
-              "critical",
-              colors.vermelho,
-              "warning",
-              colors.laranja,
-              colors.amareloNeon,
+              "critical", colors.vermilion,
+              "warning",  colors.ochre,
+              colors.indigo,
             ],
-            "circle-stroke-width": 2,
-            "circle-stroke-color": "#000",
+            "circle-stroke-width": 2.5,
+            "circle-stroke-color": colors.ink,
           },
         });
 
