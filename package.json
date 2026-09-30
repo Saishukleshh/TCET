@@ -1,0 +1,16 @@
+{
+  "name": "aegisflow",
+  "private": true,
+  "version": "0.1.0",
+  "description": "AEGISFLOW — Intelligent Disaster Management & Urban Flood Prediction (Hackconquest PS 14)",
+  "workspaces": [
+    "apps/web",
+    "packages/shared"
+  ],
+  "scripts": {
+    "dev:web": "npm --workspace apps/web run dev",
+    "dev:api": "cd apps/api && uvicorn app.main:app --reload --host 0.0.0.0 --port 8000",
+    "build:shared": "npm --workspace packages/shared run build",
+    "build:web": "npm --workspace apps/web run build"
+  }
+}

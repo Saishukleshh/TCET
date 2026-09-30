@@ -1,0 +1,14 @@
+{
+  "name": "@aegisflow/shared",
+  "version": "0.0.1",
+  "description": "Shared TypeScript types for AEGISFLOW (mirrored from Pydantic schemas)",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

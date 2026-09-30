@@ -1,0 +1,7 @@
+[
+  {"id":"shelter-001","name":"Dharavi Community Hall","lng":72.8681,"lat":19.0685,"capacity":300,"occupancy":0,"status":"open","source":"simulated"},
+  {"id":"shelter-002","name":"Kurla Municipal School","lng":72.8745,"lat":19.0675,"capacity":200,"occupancy":0,"status":"open","source":"simulated"},
+  {"id":"shelter-003","name":"Sion Hospital Annex","lng":72.8751,"lat":19.0620,"capacity":150,"occupancy":0,"status":"open","source":"simulated"},
+  {"id":"shelter-004","name":"Chunabhatti Sports Ground","lng":72.8812,"lat":19.0620,"capacity":400,"occupancy":0,"status":"open","source":"simulated"},
+  {"id":"shelter-005","name":"Matunga Gymkhana","lng":72.8685,"lat":19.0740,"capacity":180,"occupancy":0,"status":"open","source":"simulated"}
+]

@@ -1,0 +1,89 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [72.8720, 19.0650], [72.8780, 19.0650],
+          [72.8780, 19.0710], [72.8720, 19.0710], [72.8720, 19.0650]
+        ]]
+      },
+      "properties": {
+        "id": "zone-001", "name": "Kurla West",
+        "elevation_m": 4.2, "vulnerability": 0.82, "history_score": 0.75, "population": 48000
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [72.8780, 19.0650], [72.8840, 19.0650],
+          [72.8840, 19.0710], [72.8780, 19.0710], [72.8780, 19.0650]
+        ]]
+      },
+      "properties": {
+        "id": "zone-002", "name": "Kurla East",
+        "elevation_m": 5.1, "vulnerability": 0.68, "history_score": 0.60, "population": 31000
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [72.8720, 19.0590], [72.8780, 19.0590],
+          [72.8780, 19.0650], [72.8720, 19.0650], [72.8720, 19.0590]
+        ]]
+      },
+      "properties": {
+        "id": "zone-003", "name": "Sion",
+        "elevation_m": 6.5, "vulnerability": 0.45, "history_score": 0.40, "population": 22000
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [72.8780, 19.0590], [72.8840, 19.0590],
+          [72.8840, 19.0650], [72.8780, 19.0650], [72.8780, 19.0590]
+        ]]
+      },
+      "properties": {
+        "id": "zone-004", "name": "Chunabhatti",
+        "elevation_m": 3.8, "vulnerability": 0.78, "history_score": 0.70, "population": 19000
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [72.8660, 19.0650], [72.8720, 19.0650],
+          [72.8720, 19.0710], [72.8660, 19.0710], [72.8660, 19.0650]
+        ]]
+      },
+      "properties": {
+        "id": "zone-005", "name": "Dharavi",
+        "elevation_m": 3.2, "vulnerability": 0.91, "history_score": 0.88, "population": 65000
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [72.8660, 19.0710], [72.8720, 19.0710],
+          [72.8720, 19.0770], [72.8660, 19.0770], [72.8660, 19.0710]
+        ]]
+      },
+      "properties": {
+        "id": "zone-006", "name": "Matunga",
+        "elevation_m": 8.1, "vulnerability": 0.30, "history_score": 0.22, "population": 18000
+      }
+    }
+  ]
+}

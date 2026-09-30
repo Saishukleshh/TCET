@@ -1,0 +1,184 @@
+/* ============================================================
+   AEGISFLOW — globals.css
+   Design tokens from design.md (Cartazista de Supermercado style)
+   + AEGISFLOW semantic colour overrides (section "Colour meaning")
+   ============================================================ */
+
+/* ── Google Fonts ──────────────────────────────────────────── */
+@import url("https://fonts.googleapis.com/css2?family=Impact&family=Anton&family=JetBrains+Mono:wght@400;500&display=swap");
+
+@import "tailwindcss";
+
+/* ── CSS custom properties (design tokens) ─────────────────── */
+:root {
+  /* Brand palette — Cartazista */
+  --color-rosa-neon:    #FF10F0;
+  --color-amarelo-neon: #FFFF00;
+  --color-verde-neon:   #00FF00;
+  --color-laranja:      #FF6600;
+  --color-preto:        #000000;
+  --color-azul-fosco:   #0066CC;
+  --color-vermelho:     #FF0000;
+  --color-roxo-neon:    #FF00FF;
+  --color-branco:       #FFFFFF;
+
+  /* Semantic — severity (AEGISFLOW, always with word label) */
+  --severity-critical:  var(--color-vermelho);     /* #FF0000 */
+  --severity-warning:   var(--color-laranja);      /* #FF6600 */
+  --severity-watch:     var(--color-amarelo-neon); /* #FFFF00 */
+  --severity-safe:      var(--color-verde-neon);   /* #00FF00 */
+
+  /* Semantic — confidence */
+  --confidence-verified:   var(--color-verde-neon);   /* solid */
+  --confidence-probable:   var(--color-amarelo-neon); /* solid */
+  --confidence-unverified: transparent;               /* Branco dashed outline */
+
+  /* Semantic — water / rainfall */
+  --color-water: var(--color-azul-fosco); /* #0066CC */
+
+  /* Brand accents (not for data meaning) */
+  --color-accent-primary:   var(--color-rosa-neon);
+  --color-accent-secondary: var(--color-roxo-neon);
+
+  /* Surfaces */
+  --surface-base:    #0A0A0A;  /* near-black, not pure black */
+  --surface-overlay: #111111;
+  --surface-card:    #1A1A1A;
+  --surface-border:  #2A2A2A;
+
+  /* Typography */
+  --font-display: Impact, "Arial Narrow", Arial, sans-serif;
+  --font-accent:  Anton, Impact, Arial, sans-serif;
+  --font-body:    Impact, "Arial Narrow", Arial, sans-serif;
+  --font-mono:    "JetBrains Mono", "Courier New", Courier, monospace;
+
+  /* Type scale */
+  --text-hero: clamp(2.5rem, 5vw, 4rem);
+  --text-h1:   2.25rem;
+  --text-h2:   1.5rem;
+  --text-body: 1rem;
+  --text-sm:   0.875rem;
+
+  /* Spacing (base 8px) */
+  --space-1: 0.5rem;   /* 8px  */
+  --space-2: 1rem;     /* 16px */
+  --space-3: 1.5rem;   /* 24px */
+  --space-4: 2rem;     /* 32px */
+  --space-6: 3rem;     /* 48px */
+  --space-8: 4rem;     /* 64px */
+
+  /* Borders — Cartazista thick borders */
+  --border-thin:   1px;
+  --border-card:   1px;
+  --border-poster: 4px;   /* thick poster-style borders on headings/badges */
+
+  /* Radii */
+  --radius-sm:  4px;
+  --radius-md:  8px;   /* base corner radius */
+  --radius-lg:  12px;
+
+  /* Shadows — hard shadows (no blur) */
+  --shadow-hard-sm: 3px 3px 0 rgba(0,0,0,0.8);
+  --shadow-hard-md: 5px 5px 0 rgba(0,0,0,0.8);
+  --shadow-card:    0 2px 12px rgba(0,0,0,0.06);
+
+  /* z-index contract */
+  --z-base:       0;
+  --z-sticky-nav: 100;
+  --z-overlay:    200;
+  --z-modal:      300;
+  --z-toast:      500;
+
+  /* Animation */
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --duration-fast:   200ms;
+  --duration-normal: 300ms;
+  --duration-enter:  420ms;
+}
+
+/* ── Base styles ──────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--surface-base);
+  color: var(--color-branco);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.6;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* Full-bleed pages (map pages) override max-width */
+body.full-bleed {
+  max-width: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: var(--text-h1); }
+h2 { font-size: var(--text-h2); }
+
+code, pre {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+
+/* ── Utility classes ──────────────────────────────────────── */
+
+/* Severity badge colours */
+.badge-critical { background: var(--severity-critical);  color: #fff; }
+.badge-warning  { background: var(--severity-warning);   color: #000; }
+.badge-watch    { background: var(--severity-watch);     color: #000; }
+.badge-safe     { background: var(--severity-safe);      color: #000; }
+
+/* Confidence badges */
+.badge-verified   { background: var(--confidence-verified);   color: #000; }
+.badge-probable   { background: var(--confidence-probable);   color: #000; }
+.badge-unverified {
+  background: transparent;
+  color: var(--color-branco);
+  border: 1.5px dashed var(--color-branco);
+}
+
+/* Hard shadow (Cartazista poster style) */
+.shadow-hard { box-shadow: var(--shadow-hard-md); }
+.shadow-hard-sm { box-shadow: var(--shadow-hard-sm); }
+
+/* Thick border (poster headings) */
+.border-poster { border: var(--border-poster) solid currentColor; }
+
+/* Entry animation */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-enter {
+  animation: fade-in-up var(--duration-enter) var(--ease-out) both;
+}
+
+/* Stagger helper (apply via inline --delay) */
+.animate-stagger {
+  animation: fade-in-up var(--duration-enter) var(--ease-out) var(--delay, 0ms) both;
+}
+
+/* ── MapLibre container helper ──────────────────────────────── */
+/* Always set an explicit height on the map container */
+.map-container {
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+}
