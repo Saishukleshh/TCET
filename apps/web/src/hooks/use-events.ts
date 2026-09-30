@@ -19,7 +19,11 @@ export function useEvents(
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isMountedRef = useRef(true);
   const onMessageRef = useRef(onMessage);
-  onMessageRef.current = onMessage;
+  const connectRef = useRef<() => void>(() => {});
+
+  useEffect(() => {
+    onMessageRef.current = onMessage;
+  }, [onMessage]);
 
   const connect = useCallback(() => {
     if (!isMountedRef.current) return;
@@ -59,7 +63,7 @@ export function useEvents(
         retryDelay.current = delay * 2;
         timeoutRef.current = setTimeout(() => {
           if (isMountedRef.current) {
-            connect();
+            connectRef.current();
           }
         }, delay);
       };
@@ -69,18 +73,23 @@ export function useEvents(
         setStatus("error");
         ws.close();
       };
-    } catch (err) {
+    } catch (_err) {
       if (!isMountedRef.current) return;
       setStatus("error");
       const delay = Math.min(retryDelay.current, 30_000);
       retryDelay.current = delay * 2;
       timeoutRef.current = setTimeout(() => {
         if (isMountedRef.current) {
-          connect();
+          connectRef.current();
         }
       }, delay);
     }
   }, []);
+
+  useEffect(() => {
+    connectRef.current = connect;
+  }, [connect]);
+
 
   const reconnect = useCallback(() => {
     if (wsRef.current) {

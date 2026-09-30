@@ -280,96 +280,67 @@ export default function CommandPage() {
     }
   };
 
+  const [layersOpen, setLayersOpen] = useState(false);
+
   return (
     <div
       style={{
-        height: "100dvh",
         display: "flex",
         flexDirection: "column",
         background: colors.washi,
         color: colors.ink,
-        overflow: "hidden",
+        flex: 1,
+        minHeight: 0,
+        width: "100%",
       }}
+      className="overflow-y-auto md:overflow-hidden h-auto md:h-[calc(100dvh-56px)]"
     >
-      {/* ── Top Header Bar ────────────────────────────────────── */}
-      <header
+      {/* ── Operational Sub-Header Bar ────────────────────────── */}
+      <div
         style={{
           background: colors.washiCard,
-          borderBottom: `2.5px solid ${colors.ink}`,
-          padding: "8px 16px",
+          borderBottom: `2px solid ${colors.ink}`,
+          padding: "8px 14px",
           display: "flex",
           flexWrap: "wrap",
           justifyContent: "space-between",
           alignItems: "center",
           gap: 10,
-          zIndex: 100,
+          zIndex: 30,
+          flexShrink: 0,
         }}
       >
-        {/* Brand & Hanko Seal */}
-        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12 }}>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
-            <span
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "1.6rem",
-                fontWeight: 900,
-                color: colors.ink,
-                letterSpacing: "0.08em",
-              }}
-            >
-              AEGISFLOW
-            </span>
-            <span
-              style={{
-                border: `2px solid ${colors.vermilion}`,
-                color: colors.vermilion,
-                fontFamily: "var(--font-display)",
-                fontSize: "0.7rem",
-                fontWeight: 800,
-                padding: "1px 6px",
-                letterSpacing: "0.1em",
-              }}
-            >
-              COMMAND
-            </span>
-          </div>
-
-          {/* Navigation Links */}
-          <nav style={{ display: "flex", flexWrap: "wrap", gap: 6, overflowX: "auto" }}>
-            {[
-              { href: "/command", label: "COMMAND", active: true },
-              { href: "/incidents", label: "INCIDENTS" },
-              { href: "/resources", label: "RESOURCES" },
-              { href: "/responder", label: "RESPONDER" },
-              { href: "/report", label: "CITIZEN PORTAL" },
-              { href: "/simulate", label: "SIMULATOR" },
-            ].map((nav) => (
-              <Link
-                key={nav.href}
-                href={nav.href}
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "0.75rem",
-                  fontWeight: 700,
-                  letterSpacing: "0.05em",
-                  padding: "5px 10px",
-                  background: nav.active ? colors.vermilion : colors.washiMuted,
-                  color: nav.active ? "#FAF4E8" : colors.ink,
-                  border: `2px solid ${colors.ink}`,
-                  boxShadow: nav.active ? `2px 2px 0 ${colors.ink}` : "none",
-                  textDecoration: "none",
-                  transition: "all 150ms ease",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {nav.label}
-              </Link>
-            ))}
-          </nav>
+        {/* Operational Status Badge */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+          <span
+            style={{
+              border: `2px solid ${colors.vermilion}`,
+              color: colors.vermilion,
+              fontFamily: "var(--font-display)",
+              fontSize: "0.75rem",
+              fontWeight: 800,
+              padding: "2px 8px",
+              letterSpacing: "0.08em",
+              background: colors.washi,
+            }}
+          >
+            COMMAND CENTER HUD
+          </span>
+          <span
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "0.75rem",
+              opacity: 0.75,
+              display: "none",
+            }}
+            className="sm:inline"
+          >
+            MUMBAI OPERATIONAL SECTOR
+          </span>
         </div>
 
         {/* Status Indicators & Rain Quick-Control */}
-        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 10 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8 }}>
           {/* Rainfall quick pill */}
           <div
             style={{
@@ -377,9 +348,9 @@ export default function CommandPage() {
               alignItems: "center",
               gap: 8,
               background: colors.washiMuted,
-              border: `2px solid ${colors.ink}`,
+              border: `1.5px solid ${colors.ink}`,
               boxShadow: `2px 2px 0 ${colors.ink}`,
-              padding: "4px 12px",
+              padding: "3px 10px",
             }}
           >
             <span style={{ fontSize: "0.75rem", fontFamily: "var(--font-display)", fontWeight: 700, color: colors.prussian }}>
@@ -388,7 +359,7 @@ export default function CommandPage() {
             <span
               style={{
                 fontFamily: "var(--font-mono)",
-                fontSize: "0.85rem",
+                fontSize: "0.8rem",
                 color: colors.prussian,
                 fontWeight: 800,
               }}
@@ -402,22 +373,22 @@ export default function CommandPage() {
               step={5}
               value={rainIntensity}
               onChange={(e) => handleRainChange(Number(e.target.value))}
-              style={{ width: 75, cursor: "pointer", accentColor: colors.prussian }}
+              style={{ width: 65, cursor: "pointer", accentColor: colors.prussian }}
               title="Test dynamic precipitation"
             />
           </div>
 
           {/* Active stats badge */}
-          <div style={{ display: "flex", gap: 8, fontSize: "0.75rem" }}>
+          <div style={{ display: "flex", gap: 6, fontSize: "0.75rem", flexWrap: "wrap" }}>
             <span
               style={{
                 background: colors.washiMuted,
-                border: `2px solid ${colors.ink}`,
+                border: `1.5px solid ${colors.ink}`,
                 color: colors.vermilion,
-                padding: "3px 8px",
+                padding: "2px 6px",
                 fontFamily: "var(--font-display)",
                 fontWeight: 800,
-                boxShadow: `2px 2px 0 ${colors.ink}`,
+                boxShadow: `1.5px 1.5px 0 ${colors.ink}`,
               }}
             >
               {incidents.length} INCIDENTS
@@ -425,15 +396,15 @@ export default function CommandPage() {
             <span
               style={{
                 background: colors.washiMuted,
-                border: `2px solid ${colors.ink}`,
+                border: `1.5px solid ${colors.ink}`,
                 color: colors.pine,
-                padding: "3px 8px",
+                padding: "2px 6px",
                 fontFamily: "var(--font-display)",
                 fontWeight: 800,
-                boxShadow: `2px 2px 0 ${colors.ink}`,
+                boxShadow: `1.5px 1.5px 0 ${colors.ink}`,
               }}
             >
-              {teams.filter((t) => t.status === "available").length}/{teams.length} UNITS READY
+              {teams.filter((t) => t.status === "available").length}/{teams.length} READY
             </span>
           </div>
 
@@ -443,7 +414,7 @@ export default function CommandPage() {
               display: "flex",
               alignItems: "center",
               gap: 6,
-              fontSize: "0.75rem",
+              fontSize: "0.7rem",
               fontFamily: "var(--font-display)",
               fontWeight: 700,
             }}
@@ -461,31 +432,35 @@ export default function CommandPage() {
                 border: `1px solid ${colors.ink}`,
               }}
             />
-            <span style={{ opacity: 0.8 }}>
+            <span style={{ opacity: 0.8 }} className="hidden sm:inline">
               {wsStatus === "connected" ? "LIVE TELEMETRY" : wsStatus.toUpperCase()}
             </span>
           </div>
 
-          {/* Mobile Panel Toggle */}
-          <button
-            onClick={() => setMobilePanelOpen((prev) => !prev)}
-            className="md:hidden"
-            style={{
-              background: mobilePanelOpen ? colors.vermilion : colors.washiMuted,
-              color: mobilePanelOpen ? "#FAF4E8" : colors.ink,
-              border: `2px solid ${colors.ink}`,
-              boxShadow: `2px 2px 0 ${colors.ink}`,
-              padding: "4px 10px",
-              fontFamily: "var(--font-display)",
-              fontSize: "0.75rem",
-              fontWeight: 700,
-              cursor: "pointer",
-            }}
-          >
-            {mobilePanelOpen ? "SHOW MAP" : "SHOW PANEL"}
-          </button>
+          {/* Mobile Quick Scroll Toggle */}
+          <div className="flex md:hidden items-center gap-4">
+            <button
+              onClick={() => {
+                const target = document.getElementById("operations-panel");
+                target?.scrollIntoView({ behavior: "smooth" });
+              }}
+              style={{
+                background: colors.vermilion,
+                color: "#FAF4E8",
+                border: `1.5px solid ${colors.ink}`,
+                boxShadow: `2px 2px 0 ${colors.ink}`,
+                padding: "3px 8px",
+                fontFamily: "var(--font-display)",
+                fontSize: "0.7rem",
+                fontWeight: 700,
+                cursor: "pointer",
+              }}
+            >
+              PANEL ↓
+            </button>
+          </div>
         </div>
-      </header>
+      </div>
 
       {/* ── Offline Reconnection Status Banner ──────────────────── */}
       {wsStatus !== "connected" && (
@@ -527,9 +502,12 @@ export default function CommandPage() {
       )}
 
       {/* ── Main Workspace ────────────────────────────────────── */}
-      <div className="flex flex-col md:flex-row flex-1 relative overflow-hidden">
+      <div className="flex flex-col md:flex-row flex-1 relative min-h-0">
         {/* Left Map Area */}
-        <div style={{ flex: 1, position: "relative", height: "100%" }}>
+        <div
+          id="map-section"
+          className="w-full h-[380px] min-h-[340px] md:h-full md:flex-1 relative shrink-0"
+        >
           <MapView
             zones={zones}
             incidents={incidents}
@@ -557,79 +535,99 @@ export default function CommandPage() {
           <div
             style={{
               position: "absolute",
-              top: 16,
-              left: 16,
+              top: 12,
+              left: 12,
               zIndex: 10,
               background: colors.washiCard,
-              border: `2.5px solid ${colors.ink}`,
-              boxShadow: `4px 4px 0 ${colors.ink}`,
-              padding: "10px 14px",
+              border: `2px solid ${colors.ink}`,
+              boxShadow: `3px 3px 0 ${colors.ink}`,
+              padding: "8px 12px",
               display: "flex",
               flexDirection: "column",
-              gap: 6,
+              gap: 4,
               fontFamily: "var(--font-display)",
-              fontSize: "0.8rem",
+              fontSize: "0.75rem",
               fontWeight: 700,
               letterSpacing: "0.04em",
+              maxWidth: "calc(100% - 24px)",
             }}
           >
-            <div style={{ opacity: 0.6, fontSize: "0.7rem", marginBottom: 2, borderBottom: `1px solid ${colors.ink}`, paddingBottom: 2 }}>
-              CARTOGRAPHIC LAYERS
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                cursor: "pointer",
+                borderBottom: `1px solid ${colors.ink}`,
+                paddingBottom: 4,
+                marginBottom: 2,
+              }}
+              onClick={() => setLayersOpen((prev) => !prev)}
+            >
+              <span style={{ opacity: 0.8, fontSize: "0.7rem" }}>
+                CARTOGRAPHIC LAYERS
+              </span>
+              <span className="md:hidden text-xs font-mono ml-2 font-bold">
+                {layersOpen ? "▲" : "▼"}
+              </span>
             </div>
-            <label style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
-              <input
-                type="checkbox"
-                checked={showZones}
-                onChange={(e) => setShowZones(e.target.checked)}
-                style={{ accentColor: colors.ochre }}
-              />
-              <span style={{ color: colors.ochre }}>Vulnerability Zones</span>
-            </label>
-            <label style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
-              <input
-                type="checkbox"
-                checked={showIncidents}
-                onChange={(e) => setShowIncidents(e.target.checked)}
-                style={{ accentColor: colors.vermilion }}
-              />
-              <span style={{ color: colors.vermilion }}>Incident Clusters</span>
-            </label>
-            <label style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
-              <input
-                type="checkbox"
-                checked={showShelters}
-                onChange={(e) => setShowShelters(e.target.checked)}
-                style={{ accentColor: colors.prussian }}
-              />
-              <span style={{ color: colors.prussian }}>Evacuation Shelters</span>
-            </label>
-            <label style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
-              <input
-                type="checkbox"
-                checked={showTeams}
-                onChange={(e) => setShowTeams(e.target.checked)}
-                style={{ accentColor: colors.indigo }}
-              />
-              <span style={{ color: colors.indigo }}>Field Response Teams</span>
-            </label>
-            <label style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
-              <input
-                type="checkbox"
-                checked={showBlocked}
-                onChange={(e) => setShowBlocked(e.target.checked)}
-                style={{ accentColor: colors.vermilion }}
-              />
-              <span style={{ color: colors.vermilion }}>Impassable Hazards</span>
-            </label>
-            <label style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
-              <input
-                type="checkbox"
-                checked={showRoute}
-                onChange={(e) => setShowRoute(e.target.checked)}
-                style={{ accentColor: colors.pine }}
-              />
-              <span style={{ color: colors.pine }}>Safe Evacuation Corridor</span>
-            </label>
+
+            <div className={`${layersOpen ? "flex" : "hidden"} md:flex flex-col gap-1.5`}>
+              <label style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
+                <input
+                  type="checkbox"
+                  checked={showZones}
+                  onChange={(e) => setShowZones(e.target.checked)}
+                  style={{ accentColor: colors.ochre }}
+                />
+                <span style={{ color: colors.ochre }}>Vulnerability Zones</span>
+              </label>
+              <label style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
+                <input
+                  type="checkbox"
+                  checked={showIncidents}
+                  onChange={(e) => setShowIncidents(e.target.checked)}
+                  style={{ accentColor: colors.vermilion }}
+                />
+                <span style={{ color: colors.vermilion }}>Incident Clusters</span>
+              </label>
+              <label style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
+                <input
+                  type="checkbox"
+                  checked={showShelters}
+                  onChange={(e) => setShowShelters(e.target.checked)}
+                  style={{ accentColor: colors.prussian }}
+                />
+                <span style={{ color: colors.prussian }}>Evacuation Shelters</span>
+              </label>
+              <label style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
+                <input
+                  type="checkbox"
+                  checked={showTeams}
+                  onChange={(e) => setShowTeams(e.target.checked)}
+                  style={{ accentColor: colors.indigo }}
+                />
+                <span style={{ color: colors.indigo }}>Field Response Teams</span>
+              </label>
+              <label style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
+                <input
+                  type="checkbox"
+                  checked={showBlocked}
+                  onChange={(e) => setShowBlocked(e.target.checked)}
+                  style={{ accentColor: colors.vermilion }}
+                />
+                <span style={{ color: colors.vermilion }}>Impassable Hazards</span>
+              </label>
+              <label style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
+                <input
+                  type="checkbox"
+                  checked={showRoute}
+                  onChange={(e) => setShowRoute(e.target.checked)}
+                  style={{ accentColor: colors.pine }}
+                />
+                <span style={{ color: colors.pine }}>Safe Evacuation Corridor</span>
+              </label>
+            </div>
           </div>
 
           {/* Pending Alerts Banner Overlay */}
@@ -637,11 +635,11 @@ export default function CommandPage() {
             <div
               style={{
                 position: "absolute",
-                top: 16,
-                right: 16,
+                top: 12,
+                right: 12,
                 zIndex: 20,
-                width: 380,
-                maxWidth: "calc(100% - 32px)",
+                width: 360,
+                maxWidth: "calc(100% - 24px)",
               }}
             >
               <ApprovalCard
@@ -655,17 +653,13 @@ export default function CommandPage() {
 
         {/* Right Operations Panel */}
         <aside
-          className={`${mobilePanelOpen ? "flex" : "hidden"} md:flex`}
+          id="operations-panel"
+          className="w-full md:w-[clamp(320px,35vw,440px)] flex flex-col shrink-0 md:shrink border-t-2 md:border-t-0 md:border-l-[2.5px] border-[#0D0D15] overflow-visible md:overflow-hidden z-10"
           style={{
-            width: "clamp(320px, 35vw, 440px)",
-            maxWidth: "100%",
             background: colors.washiCard,
-            borderLeft: `2.5px solid ${colors.ink}`,
-            flexDirection: "column",
-            overflow: "hidden",
-            zIndex: 15,
           }}
         >
+
           {/* Panel Tab Bar */}
           <div
             style={{

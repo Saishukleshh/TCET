@@ -6,6 +6,12 @@ import type { Map as MapLibreMap, NavigationControl } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { colors } from "@/lib/design-tokens";
 
+// Configure MapLibre worker url to use locally served worker bundle
+if (typeof window !== "undefined" && typeof (maplibregl as any).setWorkerUrl === "function") {
+  (maplibregl as any).setWorkerUrl("/maplibre-gl-worker.mjs");
+}
+
+
 export interface ZoneFeature {
   type: "Feature";
   geometry: { type: "Polygon"; coordinates: number[][][] };
@@ -400,8 +406,22 @@ export default function MapView({
     }
     mapRef.current = map;
 
+    // Responsive container resize observer
+    let resizeObserver: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined" && containerRef.current) {
+      resizeObserver = new ResizeObserver(() => {
+        if (mapRef.current) {
+          mapRef.current.resize();
+        }
+      });
+      resizeObserver.observe(containerRef.current);
+    }
+
     return () => {
       isMounted = false;
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      }
       if (mapRef.current) {
         mapRef.current.remove();
         mapRef.current = null;
@@ -410,6 +430,7 @@ export default function MapView({
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
 
   // Update zones source
   useEffect(() => {
@@ -532,8 +553,9 @@ export default function MapView({
   return (
     <div
       ref={containerRef}
-      className="map-container relative w-full h-full min-h-[450px]"
+      className="map-container relative w-full h-full min-h-[320px] md:min-h-[450px]"
       aria-label="AEGISFLOW Map"
+
     />
   );
 }

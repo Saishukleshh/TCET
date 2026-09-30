@@ -2,6 +2,9 @@ import type { Metadata, Viewport } from "next";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./globals.css";
 
+import Navbar from "@/components/Navbar";
+import ChatBot from "@/components/ChatBot";
+
 export const viewport: Viewport = {
   themeColor: "#F0E3CE",
   width: "device-width",
@@ -41,9 +44,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" style={{ width: "100%", height: "100%" }} suppressHydrationWarning>
       <head />
-      <body>{children}</body>
+      <body
+        style={{
+          width: "100%",
+          minHeight: "100dvh",
+          margin: 0,
+          padding: 0,
+          overflowX: "hidden",
+          display: "flex",
+          flexDirection: "column",
+        }}
+        suppressHydrationWarning
+      >
+        <Navbar />
+        <main style={{ flex: 1, display: "flex", flexDirection: "column", width: "100%", minWidth: 0, minHeight: 0 }}>
+          {children}
+        </main>
+        <ChatBot />
+      </body>
     </html>
   );
 }
+

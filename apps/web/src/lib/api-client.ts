@@ -148,3 +148,17 @@ export async function simulateReset() {
 export async function fetchSimulatorState() {
   return apiFetch<any>("/simulate/state");
 }
+
+export async function chatWithAegis(
+  messages: { role: "user" | "assistant"; content: string }[],
+  pageContext?: string
+) {
+  return apiFetch<{
+    reply: string;
+    model_used: string;
+    rate_limit_remaining: number;
+  }>("/chat/", {
+    method: "POST",
+    body: JSON.stringify({ messages, page_context: pageContext }),
+  });
+}

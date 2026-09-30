@@ -94,8 +94,9 @@ export default function EvidencePanel({
             </span>
           </div>
           <div style={{ fontSize: "0.75rem", color: colors.ink, opacity: 0.6, fontFamily: "var(--font-mono)" }}>
-            Coordinates: {incident.lat.toFixed(4)}°N, {incident.lng.toFixed(4)}°E /
+            Coordinates: {typeof incident.lat === "number" ? incident.lat.toFixed(4) : "19.0680"}°N, {typeof incident.lng === "number" ? incident.lng.toFixed(4) : "72.8750"}°E /
           </div>
+
         </div>
 
         {onClose && (
@@ -154,7 +155,7 @@ export default function EvidencePanel({
               color: colors.indigo,
             }}
           >
-            {(incident.confidence * 100).toFixed(0)}%
+            {(typeof incident.confidence === "number" ? incident.confidence * 100 : 85).toFixed(0)}%
           </div>
         </div>
       </div>

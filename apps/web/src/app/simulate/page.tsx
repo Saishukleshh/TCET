@@ -198,10 +198,10 @@ export default function SimulatePage() {
   return (
     <div
       style={{
-        minHeight: "100dvh",
+        minHeight: "100%",
         background: colors.washi,
         color: colors.ink,
-        padding: "var(--space-4)",
+        padding: "clamp(12px, 3vw, 24px)",
       }}
     >
       {/* Header bar */}
@@ -211,50 +211,53 @@ export default function SimulatePage() {
           flexWrap: "wrap",
           justifyContent: "space-between",
           alignItems: "center",
-          gap: 16,
-          marginBottom: "var(--space-4)",
-          borderBottom: `2.5px solid ${colors.ink}`,
+          gap: 14,
+          marginBottom: "var(--space-3)",
+          borderBottom: `2px solid ${colors.ink}`,
           paddingBottom: "var(--space-2)",
         }}
       >
-        <div>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
+        <div style={{ flex: 1, minWidth: "min(100%, 280px)" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 10 }}>
             <h1
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "var(--text-h1)",
+                fontSize: "clamp(1.25rem, 3.5vw, 2rem)",
                 color: colors.ink,
-                letterSpacing: "0.06em",
+                letterSpacing: "0.05em",
                 margin: 0,
+                lineHeight: 1.2,
               }}
             >
               SIMULATOR & DEMO CONTROLLER
             </h1>
             <span
               style={{
-                border: `2px solid ${colors.vermilion}`,
+                border: `1.5px solid ${colors.vermilion}`,
                 color: colors.vermilion,
                 fontFamily: "var(--font-display)",
                 fontSize: "0.75rem",
                 fontWeight: 800,
                 padding: "2px 8px",
+                whiteSpace: "nowrap",
               }}
             >
               REHEARSAL CHAMBER
             </span>
           </div>
-          <p style={{ margin: "4px 0 0", opacity: 0.7, fontSize: "0.85rem", fontFamily: "var(--font-body)" }}>
+          <p style={{ margin: "6px 0 0", opacity: 0.75, fontSize: "0.85rem", fontFamily: "var(--font-body)", lineHeight: 1.4 }}>
             Execute the complete automated 10:42 → 10:52 scenario, inject duplicate crowdsourced reports, deploy road hazard blocks, and test dynamic re-routing.
           </p>
         </div>
 
-        <div style={{ display: "flex", gap: 12 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
           <button
             onClick={handleReset}
             style={{
               fontFamily: "var(--font-display)",
               fontWeight: 700,
-              padding: "8px 16px",
+              padding: "10px 16px",
+              minHeight: 40,
               background: "transparent",
               color: colors.vermilion,
               border: `2px solid ${colors.vermilion}`,
@@ -264,22 +267,6 @@ export default function SimulatePage() {
           >
             RESET STATE
           </button>
-
-          <Link
-            href="/command"
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 700,
-              padding: "8px 16px",
-              background: colors.vermilion,
-              color: "#FAF4E8",
-              textDecoration: "none",
-              border: `2px solid ${colors.ink}`,
-              boxShadow: `3px 3px 0 ${colors.ink}`,
-            }}
-          >
-            COMMAND CENTER →
-          </Link>
         </div>
       </div>
 
@@ -288,58 +275,59 @@ export default function SimulatePage() {
         <div
           className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3"
           style={{
-            marginBottom: "var(--space-4)",
+            marginBottom: "var(--space-3)",
             background: colors.washiCard,
-            padding: "12px 16px",
+            padding: "12px 14px",
             border: `2px solid ${colors.ink}`,
             boxShadow: `3px 3px 0 ${colors.ink}`,
           }}
         >
           <div>
-            <div style={{ fontSize: "0.7rem", opacity: 0.6, fontFamily: "var(--font-display)", fontWeight: 700 }}>PRECIPITATION</div>
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: colors.prussian, fontWeight: 800 }}>
+            <div style={{ fontSize: "0.65rem", opacity: 0.7, fontFamily: "var(--font-display)", fontWeight: 700 }}>PRECIPITATION</div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", color: colors.prussian, fontWeight: 800 }}>
               {rainMm.toFixed(1)} mm/h
             </div>
           </div>
           <div>
-            <div style={{ fontSize: "0.7rem", opacity: 0.6, fontFamily: "var(--font-display)", fontWeight: 700 }}>ACTIVE INCIDENTS</div>
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: colors.vermilion, fontWeight: 800 }}>
+            <div style={{ fontSize: "0.65rem", opacity: 0.7, fontFamily: "var(--font-display)", fontWeight: 700 }}>ACTIVE INCIDENTS</div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", color: colors.vermilion, fontWeight: 800 }}>
               {state.incidents}
             </div>
           </div>
           <div>
-            <div style={{ fontSize: "0.7rem", opacity: 0.6, fontFamily: "var(--font-display)", fontWeight: 700 }}>REPORTS INGESTED</div>
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: colors.ochre, fontWeight: 800 }}>
+            <div style={{ fontSize: "0.65rem", opacity: 0.7, fontFamily: "var(--font-display)", fontWeight: 700 }}>REPORTS INGESTED</div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", color: colors.ochre, fontWeight: 800 }}>
               {state.reports}
             </div>
           </div>
           <div>
-            <div style={{ fontSize: "0.7rem", opacity: 0.6, fontFamily: "var(--font-display)", fontWeight: 700 }}>ROAD HAZARDS</div>
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: colors.vermilion, fontWeight: 800 }}>
+            <div style={{ fontSize: "0.65rem", opacity: 0.7, fontFamily: "var(--font-display)", fontWeight: 700 }}>ROAD HAZARDS</div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", color: colors.vermilion, fontWeight: 800 }}>
               {state.blocked_roads}
             </div>
           </div>
           <div>
-            <div style={{ fontSize: "0.7rem", opacity: 0.6, fontFamily: "var(--font-display)", fontWeight: 700 }}>SEALS ISSUED</div>
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: colors.pine, fontWeight: 800 }}>
+            <div style={{ fontSize: "0.65rem", opacity: 0.7, fontFamily: "var(--font-display)", fontWeight: 700 }}>SEALS ISSUED</div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", color: colors.pine, fontWeight: 800 }}>
               {state.alerts}
             </div>
           </div>
           <div>
-            <div style={{ fontSize: "0.7rem", opacity: 0.6, fontFamily: "var(--font-display)", fontWeight: 700 }}>RESPONSE UNITS</div>
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: colors.indigo, fontWeight: 800 }}>
+            <div style={{ fontSize: "0.65rem", opacity: 0.7, fontFamily: "var(--font-display)", fontWeight: 700 }}>RESPONSE UNITS</div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", color: colors.indigo, fontWeight: 800 }}>
               {state.teams?.filter((t: any) => t.status === "available").length ?? 0}/{state.teams?.length ?? 5}
             </div>
           </div>
         </div>
       )}
 
-      {/* Main Control Grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "1.2fr 0.8fr", gap: 24 }}>
-        {/* Left: Control Panel */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          {/* Automated Scenario Section */}
+      {/* Main Control Grid (Desktop: 2 columns; Mobile: Demo Scenario -> Chronicle -> Controls) */}
+      <div className="flex flex-col md:grid md:grid-cols-[1.2fr_0.8fr] gap-6 w-full">
+        {/* Left Column for desktop / separated on mobile */}
+        <div className="contents md:flex md:flex-col md:gap-5">
+          {/* Automated Scenario Section: Order 1 on mobile */}
           <div
+            className="order-1"
             style={{
               background: colors.washiCard,
               border: `3px solid ${colors.ink}`,
@@ -347,11 +335,11 @@ export default function SimulatePage() {
               padding: "var(--space-3)",
             }}
           >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: 8, marginBottom: 8 }}>
               <span
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontSize: "1.15rem",
+                  fontSize: "clamp(1rem, 2.5vw, 1.15rem)",
                   fontWeight: 800,
                   color: colors.ink,
                   letterSpacing: "0.05em",
@@ -385,10 +373,11 @@ export default function SimulatePage() {
                 background: isRunningScenario ? colors.washiMuted : colors.vermilion,
                 color: isRunningScenario ? colors.ink : "#FAF4E8",
                 fontFamily: "var(--font-display)",
-                fontSize: "1rem",
+                fontSize: "0.95rem",
                 fontWeight: 800,
                 letterSpacing: "0.06em",
                 padding: "12px",
+                minHeight: 46,
                 border: `2px solid ${colors.ink}`,
                 boxShadow: isRunningScenario ? "none" : `3px 3px 0 ${colors.ink}`,
                 cursor: isRunningScenario ? "wait" : "pointer",
@@ -398,8 +387,9 @@ export default function SimulatePage() {
             </button>
           </div>
 
-          {/* Manual Trigger Controls */}
+          {/* Manual Trigger Controls: Order 3 on mobile */}
           <div
+            className="order-3"
             style={{
               background: colors.washiCard,
               border: `2px solid ${colors.ink}`,
@@ -431,7 +421,7 @@ export default function SimulatePage() {
                 onChange={(e) => handleSetRain(Number(e.target.value))}
                 style={{ width: "100%", accentColor: colors.prussian, cursor: "pointer" }}
               />
-              <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 8 }}>
                 {[
                   { label: "Clear (0)", val: 0 },
                   { label: "Drizzle (10)", val: 10 },
@@ -443,12 +433,14 @@ export default function SimulatePage() {
                     key={p.val}
                     onClick={() => handleSetRain(p.val)}
                     style={{
-                      flex: 1,
-                      padding: "6px",
+                      flex: "1 1 auto",
+                      minWidth: 80,
+                      padding: "8px 6px",
+                      minHeight: 36,
                       background: colors.washiMuted,
                       color: colors.ink,
                       fontFamily: "var(--font-mono)",
-                      fontSize: "0.7rem",
+                      fontSize: "0.75rem",
                       fontWeight: 700,
                       border: `1.5px solid ${colors.ink}`,
                       cursor: "pointer",
@@ -461,11 +453,12 @@ export default function SimulatePage() {
             </div>
 
             {/* Action buttons */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 180px), 1fr))", gap: 10 }}>
               <button
                 onClick={() => handleInjectReports(23)}
                 style={{
                   padding: "10px",
+                  minHeight: 44,
                   background: colors.washiMuted,
                   color: colors.ink,
                   fontFamily: "var(--font-display)",
@@ -484,6 +477,7 @@ export default function SimulatePage() {
                 onClick={handleBlockRoad}
                 style={{
                   padding: "10px",
+                  minHeight: 44,
                   background: colors.washiMuted,
                   color: colors.vermilion,
                   fontFamily: "var(--font-display)",
@@ -502,6 +496,7 @@ export default function SimulatePage() {
                 onClick={handleAllocate}
                 style={{
                   padding: "10px",
+                  minHeight: 44,
                   background: colors.washiMuted,
                   color: colors.indigo,
                   fontFamily: "var(--font-display)",
@@ -520,6 +515,7 @@ export default function SimulatePage() {
                 onClick={handleApproveAlerts}
                 style={{
                   padding: "10px",
+                  minHeight: 44,
                   background: colors.washiMuted,
                   color: colors.pine,
                   fontFamily: "var(--font-display)",
@@ -537,8 +533,9 @@ export default function SimulatePage() {
           </div>
         </div>
 
-        {/* Right: Real-time Event Console Log */}
+        {/* Right: Real-time Event Console Log: Order 2 on mobile */}
         <div
+          className="order-2 md:order-none"
           style={{
             background: colors.washiCard,
             border: `2.5px solid ${colors.ink}`,
@@ -546,7 +543,7 @@ export default function SimulatePage() {
             display: "flex",
             flexDirection: "column",
             height: "100%",
-            minHeight: 480,
+            minHeight: 360,
           }}
         >
           <div
@@ -579,6 +576,7 @@ export default function SimulatePage() {
               flexDirection: "column",
               gap: 6,
               background: "#FAF4E8",
+              maxHeight: 420,
             }}
           >
             {log.length === 0 ? (
@@ -610,5 +608,6 @@ export default function SimulatePage() {
         </div>
       </div>
     </div>
+
   );
 }
