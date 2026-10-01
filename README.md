@@ -195,5 +195,6 @@ TCET/
 ## Team
 
 **Hackconquest 2026 · TCET Mumbai**
-- **Lead & Fullstack Architecture**: Saishuklesh Maccha
+- **Lead & Fullstack Architecture/Engineer**: Saishuklesh Maccha
+- **Frontend Engineer: Omkar Parelkar**
 - **System**: AEGISFLOW (PS 14)

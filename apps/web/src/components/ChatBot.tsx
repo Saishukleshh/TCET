@@ -64,8 +64,52 @@ export default function ChatBot() {
   const [rateLimitInfo, setRateLimitInfo] = useState<{ remaining: number } | null>(null);
   const [unread, setUnread] = useState(0);
   const [pulse, setPulse] = useState(false);
+
+  // Voice states
+  const [isListening, setIsListening] = useState(false);
+  const [voiceEnabled, setVoiceEnabled] = useState(false);
+  const recognitionRef = useRef<any>(null);
+  const synthRef = useRef<SpeechSynthesis | null>(null);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // Init speech synthesis & recognition
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      synthRef.current = window.speechSynthesis;
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = true;
+        recognition.lang = "en-IN"; // Supports English + loose Indian language mixes
+        
+        recognition.onresult = (event: any) => {
+          let text = "";
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            text += event.results[i][0].transcript;
+          }
+          setInput(text);
+        };
+        recognition.onend = () => {
+          setIsListening(false);
+        };
+        recognitionRef.current = recognition;
+      }
+    }
+  }, []);
+
+  const toggleMic = () => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+    } else {
+      setInput(""); 
+      recognitionRef.current?.start();
+      setIsListening(true);
+    }
+  };
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -148,6 +192,14 @@ export default function ChatBot() {
           )
         );
         if (!open) setUnread((n) => n + 1);
+
+        // Auto-speak reply if enabled
+        if (voiceEnabled && synthRef.current) {
+          const cleanText = data.reply.replace(/[*_#`]/g, "");
+          const utterance = new SpeechSynthesisUtterance(cleanText);
+          utterance.lang = "en-IN";
+          synthRef.current.speak(utterance);
+        }
       } catch (err: any) {
         setMsgs((prev) =>
           prev.map((m) =>
@@ -311,6 +363,24 @@ export default function ChatBot() {
             </div>
           </div>
           <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+            <button
+              onClick={() => {
+                setVoiceEnabled((v) => !v);
+                if (voiceEnabled) synthRef.current?.cancel();
+              }}
+              title={voiceEnabled ? "Mute voice" : "Enable voice"}
+              style={{
+                background: voiceEnabled ? C.vermilion : "transparent",
+                border: `1.5px solid ${C.washi}`,
+                color: C.washi,
+                fontSize: "0.8rem",
+                padding: "1px 6px",
+                cursor: "pointer",
+                borderRadius: "4px"
+              }}
+            >
+              {voiceEnabled ? "🔊" : "🔈"}
+            </button>
             {rateLimitInfo && (
               <span
                 style={{
@@ -480,29 +550,49 @@ export default function ChatBot() {
               opacity: loading ? 0.6 : 1,
             }}
           />
-          <button
-            id="chatbot-send"
-            onClick={() => sendMessage(input)}
-            disabled={loading || !input.trim()}
-            style={{
-              background: loading ? C.washiMuted : C.prussian,
-              color: loading ? C.ink : C.washi,
-              border: `2px solid ${C.ink}`,
-              boxShadow: `2px 2px 0 ${C.ink}`,
-              fontFamily: "var(--font-display)",
-              fontWeight: 900,
-              fontSize: "0.78rem",
-              letterSpacing: "0.06em",
-              padding: "8px 14px",
-              cursor: loading || !input.trim() ? "not-allowed" : "pointer",
-              transition: "all 120ms ease",
-              height: "fit-content",
-              alignSelf: "flex-end",
-              opacity: loading || !input.trim() ? 0.6 : 1,
-            }}
-          >
-            {loading ? "…" : "SEND"}
-          </button>
+          <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+            <button
+              onClick={toggleMic}
+              title={isListening ? "Stop listening" : "Start voice input"}
+              style={{
+                background: isListening ? C.vermilion : C.washiCard,
+                color: isListening ? C.washi : C.ink,
+                border: `2px solid ${C.ink}`,
+                boxShadow: `2px 2px 0 ${C.ink}`,
+                fontFamily: "var(--font-display)",
+                padding: "6px 10px",
+                cursor: "pointer",
+                height: "fit-content",
+                fontSize: "0.8rem",
+                transition: "all 120ms ease",
+              }}
+            >
+              🎤
+            </button>
+            <button
+              id="chatbot-send"
+              onClick={() => sendMessage(input)}
+              disabled={loading || !input.trim()}
+              style={{
+                background: loading ? C.washiMuted : C.prussian,
+                color: loading ? C.ink : C.washi,
+                border: `2px solid ${C.ink}`,
+                boxShadow: `2px 2px 0 ${C.ink}`,
+                fontFamily: "var(--font-display)",
+                fontWeight: 900,
+                fontSize: "0.78rem",
+                letterSpacing: "0.06em",
+                padding: "8px 14px",
+                cursor: loading || !input.trim() ? "not-allowed" : "pointer",
+                transition: "all 120ms ease",
+                height: "fit-content",
+                alignSelf: "flex-end",
+                opacity: loading || !input.trim() ? 0.6 : 1,
+              }}
+            >
+              {loading ? "…" : "SEND"}
+            </button>
+          </div>
         </div>
       </div>
 
